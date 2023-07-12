@@ -1,0 +1,28 @@
+.productForm{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row-reverse;
+    
+    form{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width : 40%;
+
+    }
+
+    .imagesPreview{
+        border: 1px solid black;
+        width: 40%;
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: 30px;
+
+        img{
+            width: 300px;
+            height: 400px;
+            object-fit: cover;
+        }
+    }
+}

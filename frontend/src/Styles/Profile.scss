@@ -1,0 +1,26 @@
+.profile{
+    
+    background-color: #FAF9F8;
+    display: flex;
+    gap: 60px;
+    padding: 5%;
+    padding-bottom: 2%;
+    height: 80vh;
+
+    .leftDiv{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .header{
+            width: 300px;
+            height: 200px;
+            background-color: #f1ebdf;
+        }
+    }
+
+    .rightDiv{
+        width: 100%;
+        padding-top: 0;
+    }
+}

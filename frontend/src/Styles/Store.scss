@@ -1,0 +1,77 @@
+.store{
+    // border: 1px solid blue;
+    width: 100%;
+
+   .heading{
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1%;
+    align-items: center;
+
+    img{
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        border: none;
+        margin-bottom: 10px;
+    }
+
+    h1{
+        margin: 0;
+    }
+   }
+
+    h1{
+        text-align: center;
+        font-family: 'Poppins', sans-serif;
+        letter-spacing: 3px;
+        margin-top: -10px;
+    }
+    .items{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: space-evenly;
+        overflow: scroll;
+        height: 73vh;
+    }
+
+    .personal{
+        background-color: #fff;
+        padding:10px 5%;
+        .header{
+            display: flex;
+            justify-content: space-between;
+            
+            h3{
+                font-family: 'Limelight', cursive;
+                font-size: 20px;
+                letter-spacing: 3px;
+            }
+
+            .edit{
+                text-decoration: underline;
+                cursor: pointer;
+            }
+        }
+
+        .details{
+            h4{
+                margin: 0;
+                font-family: 'Montserrat', sans-serif;
+                margin-bottom: 20px;
+            }
+
+            span{
+                font-family: 'Jost', sans-serif;
+                letter-spacing: 2px;
+                margin-bottom: 5px;
+                font-size: 16px;
+            }
+        }
+    }
+}
+
+.items::-webkit-scrollbar{
+    display: none;
+}
