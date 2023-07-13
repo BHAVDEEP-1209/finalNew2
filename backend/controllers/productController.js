@@ -30,11 +30,9 @@ exports.getAllProducts = async(req,res)=>{
     // search is done but filter and pagination is not done!
     // searching the products!
     const q = req.query.keyword;
-    console.log(req.query);
     if(q){
         
         const products = await Product.find({name : { $regex : q , $options : "i"}});
-        console.log(products);
         res.status(200).json({products, productCount});
     }
     else{
