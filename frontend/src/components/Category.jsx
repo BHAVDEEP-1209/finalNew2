@@ -19,6 +19,8 @@ const Category = (props) => {
       defaultValue={value}
       style={{
         width: 120,
+        marginRight : "20px",
+        marginLeft : "10px"
       }}
       onChange={handleChange}
       options={[

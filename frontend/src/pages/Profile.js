@@ -1,9 +1,18 @@
 import React from 'react'
 import "../Styles/Profile.scss"
 import Navbar from "../components/Navbar"
-import { Link, Outlet } from 'react-router-dom'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { handleLogOut } from '../slices/userSlice'
 
 const Profile = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleSignOut=()=>{
+    dispatch(handleLogOut());
+    navigate("/login")
+  }
   return (
     <>
     <Navbar />
@@ -18,6 +27,8 @@ const Profile = () => {
                 <Link to="/profile/account">Account</Link>
                 <br />
                 <Link to="/profile/orders">Orders</Link>
+                <br />
+                <span onClick={handleSignOut}>Sign Out</span>
             </div>
         </div>
         <div className="rightDiv">

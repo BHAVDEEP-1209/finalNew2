@@ -43,7 +43,7 @@ const Item = (props) => {
         <img src={image} alt="" />
         <div className="footer">
             <h4>{props.state.name}</h4>
-            <span>Rs.{props.state.price}</span>
+            <span>&#x20B9; {props.state.price}</span>
         </div>
         {
           user?.role == "vendor" && <>

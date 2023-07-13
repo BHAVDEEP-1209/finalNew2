@@ -19,6 +19,8 @@ const Store = () => {
     }
     getData();
   },[])
+
+  console.log(products);
   return (
     <div className='store'>
         <h1>My Store</h1>

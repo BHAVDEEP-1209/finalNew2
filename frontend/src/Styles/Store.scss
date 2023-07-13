@@ -30,10 +30,11 @@
     .items{
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        border: 1px solid red;
         justify-content: space-evenly;
         overflow: scroll;
         height: 73vh;
+        gap: 10px;
     }
 
     .personal{

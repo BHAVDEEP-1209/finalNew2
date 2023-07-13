@@ -7,6 +7,7 @@ import Category from '../components/Category'
 import SavedAs from '../components/SavedAs'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 const AddProduct = () => {
 
@@ -149,15 +150,20 @@ const AddProduct = () => {
       <Navbar />
     <div className='productForm'>
       <form onSubmit={formSubmit}>
-        <input type="text" name="name" id="" placeholder='name' value={formValues?.name} onChange={handleChange}/>
+        <input type="text" name="name" id="" placeholder='Name' value={formValues?.name} onChange={handleChange}/>
         <input type="text" name="description" id="" placeholder='Description' value={formValues?.description} onChange={handleChange}/>
         <input type="number" name="price" id="" placeholder='Price' value={formValues?.price} onChange={handleChange} />
         <input type="number" name="stock" id="" placeholder='Stock' value={formValues?.stock} onChange={handleChange}/>
-        <label>Upload multiple profile picture</label>
-        <input type="file" name="image" multiple />
-        <span>Selected Category:</span>
-        <span>{formValues?.category}</span>
-        <Category state={{formValues,setFormValues}}/>
+        <label htmlFor='image'><UploadFileIcon /> Upload 4 Product Pictures </label>
+        <input type="file" name="image" multiple style={{display : "none"}} id="image"/>
+        
+       <div className="category">
+       <span className='h1'>Select Category:</span>
+        <Category state={{formValues,setFormValues}} />
+        <span className='h2'>{formValues?.category}</span>
+       </div>
+
+        <hr />
 
         {/* select category  */}
         {/* <label for="category">Choose a category:</label>
@@ -170,21 +176,30 @@ const AddProduct = () => {
         </select> */}
         {/* sadasd */}
 
-        <span>Saved As:</span>
-        <span>{formValues?.savedAs}</span>
+       <div className='saveAs'>
+       <span className='h1'>Save As:</span>
+        <span className='h2'>{formValues?.savedAs}</span>
+       </div>
         <SavedAs state={{formValues,setFormValues}}/>
         <button type="submit">{id!=undefined ? "Edit" : "Submit"}</button>
       </form>
 
       <div className="imagesPreview">
         {
-          formValues?.images!=undefined && <>
+          formValues?.images!=undefined ? <>
           {
             formValues?.images.map((p)=>{
-              console.log(p);
               return <img src={baseImgUrl+`${p}`} alt="" />
             })
           }
+          </>
+          :
+          <>
+           <img src="https://www.cureuppharma.in/wp-content/uploads/2018/06/dummy.jpg" alt="" />
+            <img src="https://www.cureuppharma.in/wp-content/uploads/2018/06/dummy.jpg" alt="" />
+            <img src="https://www.cureuppharma.in/wp-content/uploads/2018/06/dummy.jpg" alt="" />
+            <img src="https://www.cureuppharma.in/wp-content/uploads/2018/06/dummy.jpg" alt="" />
+           
           </>
         }
       </div>
