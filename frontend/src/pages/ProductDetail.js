@@ -26,6 +26,8 @@ const ProductDetail = () => {
   const [count,setCount] = useState(1);
   const user = useSelector(state=>state.currentUser);
 
+ 
+
   useEffect(() => {
     const get = async () => {
       try {
@@ -45,11 +47,16 @@ const ProductDetail = () => {
   const stock = product.stock>0 ? "In Stock" : "Out Of Stock"
 
   const handleAddToCart=async()=>{
+
+    const itemId = product._id + user.id;
+
+
     const cartItem = {
       product : product,
       quantity : count,
       purchasedAs : "cart",
-      purchasedBy : user.id
+      purchasedBy : user.id,
+      id : itemId
     }
     try {
         const res = axios.post("http://localhost:5000/cart/addToCart",cartItem);

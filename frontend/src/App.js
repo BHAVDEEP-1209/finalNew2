@@ -11,6 +11,8 @@ import Account from "./components/Account";
 import Orders from "./components/Orders";
 import Drafts from "./components/Drafts";
 import Cart from "./pages/Cart";
+import OrdersPage from "./pages/OrdersPage";
+import Checkout from "./pages/Checkout"
 import { useSelector } from "react-redux";
 
 function App() {
@@ -46,12 +48,20 @@ function App() {
       element : <Cart />
     },
     {
+      path : "/checkout/:payment",
+      element : <Checkout />
+    },
+    {
       path : "/productDetail/:id",
       element : <ProductDetail />
     },
     {
       path : "/addProduct/:id",
       element : <AddProduct />
+    },
+    {
+      path : "/orders",
+      element : <OrdersPage />
     },
     {
       path : "*",

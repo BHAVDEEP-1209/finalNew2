@@ -11,3 +11,14 @@ body{
     margin: 0;
     box-sizing: border-box;
 }
+
+.head{
+    display: flex;
+    justify-content: space-between;
+
+    .edit{
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}
+
