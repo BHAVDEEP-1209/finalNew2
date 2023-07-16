@@ -26,10 +26,28 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "role",
   },
+  disabled : {
+    type : Boolean,
+    default : false
+  },
   createdAt: {
     type: Date,
     default: Date.now,
   },
+  business : {
+    logo : {
+      type: String,
+      default : "bLogo"
+    },
+    brandName : {
+      type: String,
+      default : "bName"
+    },
+    brandDescription : {
+      type: String,
+      default : "bDescription"
+    },
+  }
 
 });
 

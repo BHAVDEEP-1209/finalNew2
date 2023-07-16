@@ -17,6 +17,14 @@ const cartSchema = new mongoose.Schema({
     purchasedBy : {
         type : String,
         required : true
+    },
+    orderStatus : {
+        type: String,
+        default : "stock"
+    },
+    createdAt: {
+        type: Date,
+        default : Date.now
     }
 },{timeseries : true})
 

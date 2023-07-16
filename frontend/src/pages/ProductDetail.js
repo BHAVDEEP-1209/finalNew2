@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from "../components/Navbar"
 import "../Styles/ProductDetail.scss"
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { addToCart, getProduct } from '../utils/utils'
 import down from "../assets/arrow.svg"
 import up from "../assets/up-arrow.svg"
@@ -15,6 +15,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useSelector } from 'react-redux'
 import UserModal from '../components/UserModal'
 import axios from 'axios'
+import { Button, notification, Space } from 'antd';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -25,8 +26,18 @@ const ProductDetail = () => {
   const [click3, setClick3] = useState(false);
   const [count,setCount] = useState(1);
   const user = useSelector(state=>state.currentUser);
+  const navigate = useNavigate();
+  const address = user?.address;
 
- 
+   ////////////////////notification
+   const [api, contextHolder] = notification.useNotification();
+   let msg = useState("");
+   const openNotificationWithIcon = (type) => {
+     api[type]({
+       message: msg,    
+     });
+   };
+   //////////////////////////
 
   useEffect(() => {
     const get = async () => {
@@ -47,7 +58,61 @@ const ProductDetail = () => {
   const stock = product.stock>0 ? "In Stock" : "Out Of Stock"
 
   const handleAddToCart=async()=>{
+    if(product.stock==0){
 
+      msg = "Out Of Stock! Plz Check Later"
+      openNotificationWithIcon('warning');
+      
+    }else{
+      const itemId = product._id + user.id;
+
+
+    const cartItem = {
+      product : product,
+      quantity : count,
+      purchasedAs : "cart",
+      purchasedBy : user.id,
+      id : itemId
+    }
+    try {
+        const res = await axios.post("http://localhost:5000/cart/addToCart",cartItem);
+
+        msg = "Added To Cart!"
+        openNotificationWithIcon('success');
+
+    } catch (error) {
+        console.log(error);
+    }
+    }
+  }
+
+  const handleBuy=async()=>{
+   if(user?.address==undefined){
+
+    msg = "Add Address!"
+    openNotificationWithIcon('warning');
+
+    setTimeout(() => {
+      navigate(`/profile/account`)
+    }, 800)
+
+   }else if(product.stock==0){
+
+    msg = "Out Of Stock! Plz Check Later"
+    openNotificationWithIcon('warning');
+    
+   }else{
+
+    if(!address.street || !address.city || !address.state || !address.pin){
+      msg = "Add Address!"
+      openNotificationWithIcon('warning');
+
+      setTimeout(() => {
+        navigate(`/profile/account`)
+      }, 800)
+
+      return;
+    }
     const itemId = product._id + user.id;
 
 
@@ -59,21 +124,20 @@ const ProductDetail = () => {
       id : itemId
     }
     try {
-        const res = axios.post("http://localhost:5000/cart/addToCart",cartItem);
-        window.alert("added to cart!");
+        const res = await axios.post("http://localhost:5000/cart/addToCart",cartItem);
+        navigate(`/checkout`)
     } catch (error) {
         console.log(error);
     }
   }
+   
 
-  const handleBuy=()=>{
-    {
-      user.address == undefined ? window.alert("Add Address!") : window.alert("sucess!");
-    }
+
   }
   
   return (
     <>
+    {contextHolder}
       <Navbar />
       <div className='productDetail'>
         <div className="productContainer">
@@ -162,8 +226,12 @@ const ProductDetail = () => {
             </div>
             
 
-            <button onClick={handleAddToCart}><ShoppingCartIcon />Add</button>
-            <button onClick={handleBuy}><LocalMallIcon />Buy</button>
+              {
+                product.uploadedBy!=user?.email && <>
+                            <button onClick={handleAddToCart}><ShoppingCartIcon />Add</button>
+                        <button onClick={handleBuy}><LocalMallIcon />Buy</button>
+                </>
+              }
           </div>
 
 

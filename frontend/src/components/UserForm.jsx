@@ -2,13 +2,17 @@ import React, { useState } from 'react'
 import "../Styles/UserForm.scss"
 import { useDispatch, useSelector } from 'react-redux'
 import { updateUser } from '../utils/utils';
-import { setAddress } from '../slices/userSlice';
+import { setAddress, setValue } from '../slices/userSlice';
 
 const UserForm = (props) => {
     const user = useSelector(state=>state.currentUser);
-    const [formValues,setFormvalues]  = useState();
+    const [formValues,setFormvalues]  = useState(user?.address);
+    const [name,setName] = useState(user?.name);
+    const p = user?.password ? user?.password : "";
+    const [password,setPassword] = useState(p);
     const click = props.state?.click;
     const dispatch = useDispatch();
+    const pass = user?.password ? "Change Password!" : "Set Password!" ;
 
     const handleChange = (e)=>{
         const {name,value} = e.target;
@@ -26,11 +30,14 @@ const UserForm = (props) => {
         const id = user.id
         const add = {
             email : user.email,
-            address : [formValues]
+            address : [formValues],
+            name : name,
+            password : password
         }
         try {
             const res = await updateUser(id,add);
-            dispatch(setAddress([formValues])); 
+            dispatch(setAddress(formValues));
+            dispatch(setValue(res.data)); 
             setFormvalues({});
             props.state?.setClick(!click);
         } catch (error) {
@@ -47,7 +54,11 @@ const UserForm = (props) => {
         </div>
         <div className='div'>
         <span>Name</span>
-        <input type="text" name="" id="" value={user.name}/>
+        <input type="text" name="" id="" value={name} onChange={(e)=>setName(e.target.value)} placeholder='Enter Your Name...'/>
+        </div>
+        <div className='div'>
+        <span>{pass}</span>
+        <input type="text" name="" id="" value={password} onChange={(e)=>setPassword(e.target.value)} placeholder='Enter Password...'/>
         </div>
         <div className='div'>
         <span>Address</span>

@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage});
 
-router.post("/createProduct",upload.array("images",4),async(req,res)=>{
+router.post("/productImage/",upload.array("images",4),async(req,res)=>{
     const files = req.files;
     const imagesArray = [];
     {
@@ -28,66 +28,29 @@ router.post("/createProduct",upload.array("images",4),async(req,res)=>{
             imagesArray.push(files[i].filename);
         }
     }
-      const product = {
-        ...req.body,
-        images:imagesArray
-    }
-
-    const result = await Product.create({...product});
-    res.status(200).json(result);    
+    res.status(200).json(imagesArray);    
 });
 ////////////////////////////////
 
-router.post("/updateProduct/:id",upload.array("images",4),async(req,res)=>{
+router.post("/updateProduct/:id",async(req,res)=>{
     
-    const id = req.params.id;
-    
-    let product = await Product.findById(id);
+    try {
+        const id = req.params.id;
+        const updatedProduct = await Product.findByIdAndUpdate(id,{...req.body.formValues});
+        res.status(201).json(updatedProduct);
 
-    if(!product){
-        res.status(500).json("Product not found");
+    } catch (error) {
+        res.status(500).json("Error while updating!");
     }
-    const files = req.files;
-
-
-  if(files.length==0){
-        product = await Product.findByIdAndUpdate(id,req.body,{
-        new: true,
-        runValidators : true,
-        useFindAndModify : false
-    })
-
-    res.status(200).json(product);
-  }else{
-    const imagesArray = [];
-    {
-        for(let i=0;i<files.length;i++){
-            imagesArray.push(files[i].filename);
-        }
-    }
-      const prod = {
-        ...req.body,
-        images:imagesArray
-    }
-    product = await Product.findByIdAndUpdate(id,prod,{
-        new: true,
-        runValidators : true,
-        useFindAndModify : false
-    })
-
-    res.status(200).json(product);
-
-  }
-    
-    
 })
 
 
 router.get("/getAllProducts",productController.getAllProducts);
-// router.post("/createProduct",productController.create);
+router.post("/createProduct",productController.create);
 // router.put("/updateProduct/:id",productController.updateProduct);
 router.delete("/deleteProduct/:id",productController.deleteProduct);
 router.get("/getProductDetails/:id",productController.getProductDetails);
 router.post("/getVendorProducts",productController.getVendorProducts);
+router.post("/getAdminProducts",productController.getAdminProducts);
 
 module.exports=router;

@@ -7,8 +7,13 @@ const initialState = {
     email : "",
     password : "",
     image : "",
-    address : [],
-    id : ""
+    address : "",
+    id : "",
+  },
+  business : {
+    logo : "",
+    name : "",
+    desc : "",
   },
   isLoggedIn : false
 }
@@ -18,6 +23,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setValue : (state,action)=>{
+ 
         state.currentUser.name = action.payload.name;
         state.currentUser.role = action.payload.role;
         state.isLoggedIn = true;
@@ -29,13 +35,21 @@ export const userSlice = createSlice({
     setAddress : (state,action)=>{
       state.currentUser.address = action.payload
     },
+    setBusiness : (state,action)=>{
+      state.business.logo = action.payload.logo;
+
+      state.business.name = action.payload.brandName;
+      state.business.desc = action.payload.brandDescription;
+
+    },
     handleLogOut : (state)=>{
         state.currentUser = {};
         state.isLoggedIn = false;
+        state.business={};
     }
   },
 })
 
-export const { setValue , handleLogOut , setAddress} = userSlice.actions
+export const { setValue , handleLogOut , setAddress , setBusiness} = userSlice.actions
 
 export default userSlice.reducer

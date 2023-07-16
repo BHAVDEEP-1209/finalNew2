@@ -39,7 +39,7 @@ const Item = (props) => {
   }
 
   return (
-    <div className='item' onClick={location=="/homepage" ? handleClick : handleNothing}>
+    <div className='item' onClick={location!="/profile" ? handleClick : handleNothing}>
         <img src={image} alt="" />
         <div className="footer">
             <h4>{props.state.name}</h4>

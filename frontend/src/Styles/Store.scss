@@ -1,6 +1,7 @@
 .store{
     // border: 1px solid blue;
     width: 100%;
+    // background-color: #fff;
 
    .heading{
     display: flex;
@@ -27,11 +28,11 @@
         font-family: 'Poppins', sans-serif;
         letter-spacing: 3px;
         margin-top: -10px;
+        text-decoration: underline;
     }
     .items{
         display: flex;
         flex-wrap: wrap;
-        border: 1px solid red;
         justify-content: space-evenly;
         overflow: scroll;
         height: 73vh;

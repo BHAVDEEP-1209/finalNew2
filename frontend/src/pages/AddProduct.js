@@ -1,24 +1,50 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import "../Styles/AddProduct.scss"
-import { addProduct, getProduct, updateProduct } from '../utils/utils'
+import { addProduct, createProduct, getProduct, updateProduct } from '../utils/utils'
 import axios from 'axios'
 import Category from '../components/Category'
 import SavedAs from '../components/SavedAs'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import Loader from "../components/Loader"
+import { Button, notification, Space } from 'antd';
 
 const AddProduct = () => {
 
   const {id} = useParams();
 
+    ////////////////////notification
+    const [api, contextHolder] = notification.useNotification();
+    let msg = useState("");
+    const openNotificationWithIcon = (type) => {
+      api[type]({
+        message: msg,    
+      });
+    };
+    //////////////////////////
+
   const user = useSelector(state=>state?.currentUser);
-  const [formValues,setFormValues] = useState({category : "watches" , savedAs : "product" , uploadedBy : user?.email});
+  const initial = {category : "watches" , savedAs : "product" ,name : "" , description : "", price : "", stock : "" , uploadedBy : user?.email}
+  const [formValues,setFormValues] = useState(initial);
   const baseImgUrl = `http://localhost:5000/images/`
+  const navigate = useNavigate();
+
+    // validation fields
+    const [formErrors, setFormErrors] = useState({});
+    const [isSubmit, setIsSubmit] = useState(false);
+    /////////// for add product !
 
   const handleChange = (e)=>{
     const {name,value} = e.target;
+
+    setFormErrors(prev=>{
+      return {
+        ...prev,
+        [name] : ""
+      }
+    })
 
     setFormValues((prev)=>{
       return {
@@ -28,51 +54,70 @@ const AddProduct = () => {
     })
   }
 
-  const handleSubmit =async(e)=>{
-    e.preventDefault();
 
-    const name = formValues?.name;
-    const desc = formValues?.description;
-    const price = formValues?.price;
-    const stock = formValues?.stock;
-    const files = e.target[4].files;
-    const category = formValues?.category;
-    const saved = formValues?.savedAs;
-    
-    console.log(formValues);
+   // validation
+   const validate = (values) => {
+    const errors = {};
 
+    if (!values.name) {
+      errors.name = "Product Name required!";
+    }
+    if (!values.description) {
+      errors.description = "Write Product Description!";
+    }
+    if (!values.price) {
+      errors.price = "Enter Price!";
+    }else if(!values.price>=1000000){
+      errors.price = "Price too High : Invalid Amount!"
+    }
+    if(!values.stock){
+      errors.stock="Enter the stock of Product!"
+    }
+    if (!values.images?.length) {
+      errors.images = "Upload 4 Product Images!";
+    }     
+    return errors;
+  };
+
+
+
+  const handleFileChange = (e)=>{
+    const {name,value} = e.target;
+
+    setFormErrors(prev=>{
+      return {
+        ...prev,
+        [name] : ""
+      }
+    })
+    const files = e.target.files;
     let formData = new FormData();
     {
       for(let i=0;i<files.length;i++){
         formData.append("images",files[i]);
       }
     }
-    formData.append("name",name);
-    formData.append("description",desc);
-    formData.append("price",price);
-    formData.append("stock",stock);
-    formData.append("category",category);
-    formData.append("savedAs",saved);
-    formData.append("uploadedBy",user?.email);
-
-
     axios({
       method: "post",
-      url: "http://localhost:5000/product/createProduct",
+      url: `http://localhost:5000/product/productImage/`,
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     })
       .then(function (response) {
         //handle success
-        setFormValues(response.data);
-        console.log(response);
+        setFormValues(prev=>{
+          return {
+            ...prev,
+            images : response.data
+          }
+        })
       })
       .catch(function (response) {
         //handle error
         console.log(response);
       });
 
-    
+
   }
 
   useEffect(()=>{
@@ -89,55 +134,65 @@ const AddProduct = () => {
     }
   },[])
 
+/////////////////// for form Errors
+  useEffect(() => {
+    const addProduct = async () => {
+      try {
+     if(!id){
+      const res = await createProduct(formValues);
+      msg = "Product Added!"
+      openNotificationWithIcon('success')
+
+      setTimeout(()=>{
+        setFormValues(initial)
+        navigate("/homepage")
+      },500)
+     }else{
+      const res = await updateProduct(id,{formValues});
+
+      msg = "Item Updated!"
+      openNotificationWithIcon('success')
+
+      setTimeout(()=>{
+        navigate("/profile/store");
+      },500)
+     }
+
+     
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+      addProduct();
+    }
+    // setLoading(false);
+  }, [formErrors]);
+
+
+
 
   const handleEdit=async(e)=>{
     e.preventDefault();
-    
-    const name = formValues?.name;
-    const desc = formValues?.description;
-    const price = formValues?.price;
-    const stock = formValues?.stock;
-    const files = e.target[4].files;
-    const category = formValues?.category;
-    const saved = formValues?.savedAs;
-    
-    console.log(formValues);
+    try {
+      const res = await updateProduct(id,{formValues});
 
-    let formData = new FormData();
-    {
-      for(let i=0;i<files.length;i++){
-        formData.append("images",files[i]);
-      }
+      msg = "Item Updated!"
+      openNotificationWithIcon('success')
+
+      setTimeout(()=>{
+        navigate("/profile/store");
+      },500)
+
+    } catch (error) {
+      console.log(error);
     }
-    formData.append("name",name);
-    formData.append("description",desc);
-    formData.append("price",price);
-    formData.append("stock",stock);
-    formData.append("category",category);
-    formData.append("savedAs",saved);
-    formData.append("uploadedBy",user?.email);
-
-
-    axios({
-      method: "post",
-      url: `http://localhost:5000/product/updateProduct/${id}`,
-      data: formData,
-      headers: { "Content-Type": "multipart/form-data" },
-    })
-      .then(function (response) {
-        //handle success
-        console.log(response);
-        setFormValues(response.data);
-        window.alert("updated!");
-      })
-      .catch(function (response) {
-        //handle error
-        console.log(response);
-      });
+    
   }
 
   const formSubmit=(e)=>{
-    if(id!=undefined){
+    if(id!=undefined && formValues?.savedAs=="draft"){
       handleEdit(e);
     }else{
       handleSubmit(e);
@@ -145,36 +200,43 @@ const AddProduct = () => {
   }
 
 
+  const handleSubmit =async(e)=>{
+    e.preventDefault();
+    
+    {
+      (id==undefined ) && setFormErrors(validate(formValues));
+    }
+    {
+      (id && formValues?.savedAs=="product" ) && setFormErrors(validate(formValues));
+    }
+    
+    setIsSubmit(true); 
+  }
+
   return (
     <>
+    {contextHolder}
       <Navbar />
     <div className='productForm'>
       <form onSubmit={formSubmit}>
-        <input type="text" name="name" id="" placeholder='Name' value={formValues?.name} onChange={handleChange}/>
+        <input type="text" name="name" id="" placeholder='Name' value={formValues?.name} onChange={handleChange} />
+        <p className='error'>{formErrors?.name}</p>
         <input type="text" name="description" id="" placeholder='Description' value={formValues?.description} onChange={handleChange}/>
+        <p className='error'>{formErrors?.description}</p>
         <input type="number" name="price" id="" placeholder='Price' value={formValues?.price} onChange={handleChange} />
+        <p className='error'>{formErrors?.price}</p>
         <input type="number" name="stock" id="" placeholder='Stock' value={formValues?.stock} onChange={handleChange}/>
+        <p className='error'>{formErrors?.stock}</p>
         <label htmlFor='image'><UploadFileIcon /> Upload 4 Product Pictures </label>
-        <input type="file" name="image" multiple style={{display : "none"}} id="image"/>
+        <input type="file" name="images" multiple style={{display : "none"}} id="image" onChange={handleFileChange}/>
+        <p className='error'>{formErrors?.images}</p>
         
        <div className="category">
        <span className='h1'>Select Category:</span>
         <Category state={{formValues,setFormValues}} />
         <span className='h2'>{formValues?.category}</span>
        </div>
-
         <hr />
-
-        {/* select category  */}
-        {/* <label for="category">Choose a category:</label>
-        <select name="category" id="category">
-        <option value="watches">Watches</option>
-        <option value="makeUp">MakeUp</option>
-        <option value="jewelry">Jewelry</option>
-        <option value="skincare">Skincare</option>
-        <option value="fashion">Fashion</option>
-        </select> */}
-        {/* sadasd */}
 
        <div className='saveAs'>
        <span className='h1'>Save As:</span>
@@ -195,12 +257,13 @@ const AddProduct = () => {
           </>
           :
           <>
-           <img src="https://www.cureuppharma.in/wp-content/uploads/2018/06/dummy.jpg" alt="" />
-            <img src="https://www.cureuppharma.in/wp-content/uploads/2018/06/dummy.jpg" alt="" />
-            <img src="https://www.cureuppharma.in/wp-content/uploads/2018/06/dummy.jpg" alt="" />
-            <img src="https://www.cureuppharma.in/wp-content/uploads/2018/06/dummy.jpg" alt="" />
            
-          </>
+            <img src="https://www.cureuppharma.in/wp-content/uploads/2018/06/dummy.jpg" alt="" />
+            <img src="https://www.cureuppharma.in/wp-content/uploads/2018/06/dummy.jpg" alt="" />
+            <img src="https://www.cureuppharma.in/wp-content/uploads/2018/06/dummy.jpg" alt="" />
+            <img src="https://www.cureuppharma.in/wp-content/uploads/2018/06/dummy.jpg" alt="" />
+            </>
+           
         }
       </div>
     </div>

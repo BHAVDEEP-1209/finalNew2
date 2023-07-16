@@ -14,13 +14,16 @@ const Product = require("../models/productModel");
 
 // const upload = multer({storage});
 
-// //create products
-// exports.create = upload.array("images",4),async(req,res)=>{
-//     // const product = await Product.create(req.body);
-//     // res.status(201).json(product);
-   
-//     console.log("hello");
-// }
+//create products
+exports.create = async(req,res)=>{
+    try {
+        const product = await Product.create(req.body);
+        res.status(201).json(product);
+    } catch (error) {
+        res.status(500).json("Error while creating product!");
+    }
+ 
+}
 
 // get all Products
 exports.getAllProducts = async(req,res)=>{
@@ -36,7 +39,7 @@ exports.getAllProducts = async(req,res)=>{
         res.status(200).json({products, productCount});
     }
     else{
-        const products = await Product.find();
+        const products = await Product.find().sort({"Orders" : 1});
         res.status(200).json({products, productCount});
     }
 }
@@ -100,6 +103,21 @@ exports.getProductDetails = async(req,res,next)=>{
 exports.getVendorProducts = async(req,res)=>{
     try {
         const products = await Product.find({uploadedBy : req.body.email , savedAs : req.body.savedAs})
+
+        if(products){
+            return res.status(200).json(products);
+        }
+        return res.status(204).json("No Products Yet!")
+    } catch (error) {
+        return res.status(500).json("Error while fetching data");
+    }
+
+    
+}
+
+exports.getAdminProducts = async(req,res)=>{
+    try {
+        const products = await Product.find({savedAs : req.body.savedAs})
 
         if(products){
             return res.status(200).json(products);

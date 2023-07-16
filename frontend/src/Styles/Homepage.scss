@@ -2,6 +2,7 @@
     // width: 96vw;
     width: 100%;
     
+    
 
     .videoDiv {
         width: 100%;
@@ -36,6 +37,8 @@
         background-color: #f4eddd;
         margin: 0;
         padding: 30px;
+        height: calc(100% - 100px);
+        min-height: 500px;
         // position: relative;
 
         .heading{

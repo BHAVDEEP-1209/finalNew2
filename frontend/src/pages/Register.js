@@ -10,6 +10,8 @@ import { auth, provider } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setValue } from "../slices/userSlice";
+import { Link } from 'react-router-dom'
+import { Button, notification, Space } from 'antd';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -17,6 +19,16 @@ const Register = () => {
 
   const intialValues = { role: "", name: "", email: "", password: "" };
   const [formValues, setFormValues] = useState(intialValues);
+
+  ////////////////////notification
+  const [api, contextHolder] = notification.useNotification();
+  let msg = useState("");
+  const openNotificationWithIcon = (type) => {
+    api[type]({
+      message: msg,    
+    });
+  };
+  //////////////////////////
 
   // validation fields
   const [formErrors, setFormErrors] = useState({});
@@ -52,11 +64,22 @@ const Register = () => {
     if (!values.role) {
       errors.role = "Role required!";
     }
+
     if (!values.email) {
-      errors.email = "Email required!";
-    } else if (!regex.test(values.email)) {
-      errors.email = "Invalid Email Address!";
+      errors.email = "Input required!";
+    } else {
+      const ch = values.email.at(0);
+      if (ch >= "0" && ch <= "9") {
+          if(values.email.length!=10){
+            errors.email = "Invalid Phn Number!";
+          }
+      } else {
+        if (!regex.test(values.email)) {
+          errors.email = "Invalid Email Address!";
+        }
+      }
     }
+
     if (!values.password) {
       errors.password = "Password required!";
     } else if (values.password.length < 6) {
@@ -72,66 +95,7 @@ const Register = () => {
     setIsSubmit(true);
   };
 
-  /// google sign in using firebase
-  const handleGoogleSignIn = async () => {
-    try {
-      const response = await signInWithPopup(auth, provider);
 
-
-      let userData = {
-        name: response.user.displayName,
-        email: response.user.email,
-        password: "",
-        image: response.user.photoURL,
-      };
-
-      // / sending user data
-      try {
-        const result = await SignUp(userData);
-        if (result.status == 201) {
-          if (!formValues.role) {
-            window.alert("enter role!");
-            return;
-          }
-
-          userData = { ...userData, role: formValues.role};
-          try {
-            const id = result.data._id;
-            const res = await updateUser(id, userData);
-            dispatch(setValue(res.data));
-            navigate("/homepage");
-          } catch (error) {
-            console.log(error);
-          }
-        } else {
-          // already exists!
-
-          if (result.data.role == "role") {
-            if (!formValues.role) {
-              window.alert("enter role!");
-              return;
-            }
-            userData = { ...userData, role: formValues.role };
-            try {
-              const id = result.data._id;
-              const res = await updateUser(id, userData);
-              dispatch(setValue(res.data));
-              navigate("/homepage");
-            } catch (error) {
-              console.log(error);
-            }
-          }else{
-            dispatch(setValue(result.data));
-            navigate("/homepage")
-          }
-        }
-      } catch (error) {
-        window.alert("Error");
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   // validates erros and calls the function when there is no error
   useEffect(() => {
@@ -139,13 +103,18 @@ const Register = () => {
       try {
         const result = await SignUp(formValues);
         if (result.status == 201) {
-          window.alert("success!");
-          navigate("/login");
+          msg = "Success!"
+          openNotificationWithIcon('success')
+          setTimeout(()=>{
+            navigate("/login");
+          },500)
         } else {
-          window.alert("already exists!");
+          msg = "Already Email Exists!"
+          openNotificationWithIcon('warning');
         }
       } catch (error) {
-        window.alert("Error");
+        msg = "Error While Signing Up!"
+        openNotificationWithIcon('error');
       }
     };
     if (Object.keys(formErrors).length === 0 && isSubmit) {
@@ -155,7 +124,11 @@ const Register = () => {
 
   return (
     <div className="register">
+      {contextHolder}
       <Navbar />
+      <Space>
+      <Button onClick={() => openNotificationWithIcon('success')}>Success</Button>
+      </Space>
       <div className="imgContainer">
         <img
           src="https://assets.burberry.com/is/image/Burberryltd/MyAccount.jpg?$BBY_V2_BASIC$&wid=1875&hei=375"
@@ -178,7 +151,7 @@ const Register = () => {
             <input
               type="text"
               name="email"
-              placeholder="Enter Your Email..."
+              placeholder="Enter Email/Phn Number..."
               value={formValues.email}
               onChange={handleChange}
             />
@@ -195,19 +168,9 @@ const Register = () => {
             <p className="error">{formErrors?.role}</p>
             <button type="submit">REGISTER</button>
           </div>
-          <div className="otherSignInOptions">
-            <div onClick={handleGoogleSignIn}>
-              <img src={google} alt="" />
-              <span>Google</span>
-            </div>
-            {/* <div className='div2'>
-                
-                    <img src={phone} alt="" />
-                    <span>Phone</span>
-                  
-                </div> */}
-          </div>
+
         </form>
+        <Link to="/">Sign In</Link>
       </div>
     </div>
   );
