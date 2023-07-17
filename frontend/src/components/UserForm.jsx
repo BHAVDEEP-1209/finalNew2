@@ -3,9 +3,14 @@ import "../Styles/UserForm.scss"
 import { useDispatch, useSelector } from 'react-redux'
 import { updateUser } from '../utils/utils';
 import { setAddress, setValue } from '../slices/userSlice';
+import Loader from "../components/Loader"
 
 const UserForm = (props) => {
+
+    const [loading,setLoading] = useState(false);
+
     const user = useSelector(state=>state.currentUser);
+    const initial = user?.address;
     const [formValues,setFormvalues]  = useState(user?.address);
     const [name,setName] = useState(user?.name);
     const p = user?.password ? user?.password : "";
@@ -26,6 +31,9 @@ const UserForm = (props) => {
     }
 
     const handleSave=async()=>{
+
+        setLoading(true);
+
         //validation
         const id = user.id
         const add = {
@@ -37,10 +45,14 @@ const UserForm = (props) => {
         try {
             const res = await updateUser(id,add);
             dispatch(setAddress(formValues));
-            dispatch(setValue(res.data)); 
+            dispatch(setValue(res.data));
+            
+            setLoading(false);
+
             setFormvalues({});
             props.state?.setClick(!click);
         } catch (error) {
+            setLoading(false);
             console.log(error);
         }
     }
@@ -70,10 +82,12 @@ const UserForm = (props) => {
 
         <div className="buttons">
             <button onClick={()=>{
-                setFormvalues({});
+                setFormvalues({initial});
                 props.state?.setClick(!click);
             }}>CANCEL</button>
-            <button onClick={handleSave}>SAVE</button>
+            {
+                loading ? <Loader /> : <button onClick={handleSave}>SAVE</button>
+            }
         </div>
     </div>
   )

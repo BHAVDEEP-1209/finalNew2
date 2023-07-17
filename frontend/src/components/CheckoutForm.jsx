@@ -6,7 +6,8 @@ import "../Styles/UserForm.scss"
 
 const CheckoutForm = () => {
     const user = useSelector(state=>state.currentUser);
-        const [formValues,setFormvalues]  = useState(user?.address);
+    const initial = user?.address
+        const [formValues,setFormvalues]  = useState({...user?.address});
         const [click,setClick] = useState(false);
         const dispatch = useDispatch();
 
@@ -48,8 +49,11 @@ const CheckoutForm = () => {
 
     const handleSave=async()=>{
         //validation
+
         setFormErrors(validate(formValues));
         setIsSubmit(true);
+
+        console.log(formValues);
     }
 
 
@@ -61,7 +65,7 @@ const CheckoutForm = () => {
         try {
             const res = await updateUser(id,{address : [formErrors]});
             dispatch(setAddress(formValues)); 
-            setFormvalues({});
+            setFormvalues(formValues);
             setClick(false);
         } catch (error) {
             console.log(error);
@@ -86,20 +90,20 @@ const CheckoutForm = () => {
         <span>Shipping Address</span>
         <span className='edit' onClick={()=>setClick(true)} style={{display : editDis}}>Edit</span>
         </div>
-        <input type="text" name="street" id="" placeholder='Enter Street...' onChange={handleChange} value={formValues?.street}/>
+        <input type="text" name="street" id="" placeholder='Enter Street...' onChange={handleChange} value={formValues?.street} disabled={!click}/>
         <p className="error">{formErrors?.street}</p>
-        <input type="text" name="city" id="" placeholder='Enter City...' onChange={handleChange} value={formValues?.city}/>
+        <input type="text" name="city" id="" placeholder='Enter City...' onChange={handleChange} value={formValues?.city} disabled={!click}/>
         <p className="error">{formErrors?.city}</p>
-        <input type="text" name="state" id="" placeholder='Enter State...' onChange={handleChange} value={formValues?.state}/>
+        <input type="text" name="state" id="" placeholder='Enter State...' onChange={handleChange} value={formValues?.state} disabled={!click}/>
         <p className="error">{formErrors?.state}</p>
-        <input type="number" name="pin" id="" placeholder='Enter PinCode...' onChange={handleChange} value={formValues?.pin}/>
+        <input type="number" name="pin" id="" placeholder='Enter PinCode...' onChange={handleChange} value={formValues?.pin} disabled={!click}/>
         <p className="error">{formErrors?.pin}</p>
         </div>
 
         {/* button */}
         <div className="buttons" style={{display : dis}}>
             <button onClick={()=>{
-                setFormvalues({});
+                setFormvalues({...initial});
                 setFormErrors({});
                 setClick(false);
             }}>CANCEL</button>

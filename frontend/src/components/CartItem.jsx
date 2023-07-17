@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom';
 import "../Styles/Cart.scss"
 import { Button, notification, Space } from 'antd';
 import { Select } from 'antd';
+import Loader from "../components/Loader";
 
 const CartItem = (props) => {
     const product = props.state.product;
@@ -16,6 +17,8 @@ const CartItem = (props) => {
     const [quan, setQuan] = useState(props.state.quantity);
     const [onLoad, setLoad] = useState(false);
     const location = useLocation().pathname;
+
+    const [loading, setLoading] = useState(false);
 
     let nq = quan;
     ////////////////////notification
@@ -45,23 +48,30 @@ const CartItem = (props) => {
 
 //////////////////// delete
     const handleDelete = async () => {
+        setLoading(true);
+
         try {
             const del = await deleteCartItem(props.state.id);
 
             msg = "Item Deleted!"
             openNotificationWithIcon('success')
 
+            setLoading(false);
+
             props.st.setClick(prev => {
                 return !prev;
             })
 
         } catch (error) {
+
+            setLoading(false);
             console.log(error);
         }
     }
 //////////////////////////
 
     useEffect(() => {
+
         if (onLoad) {
             const setData = setTimeout(async () => {
                 try {
@@ -69,7 +79,7 @@ const CartItem = (props) => {
                 } catch (error) {
                     console.log(error);
                 }
-            },500)
+            },100)
 
             return () => clearTimeout(setData)
         }
@@ -94,9 +104,15 @@ const CartItem = (props) => {
                             <span>Price:{product?.price}</span>
                         </div>
                         {
-                            location == "/cart" && <div className="delete" onClick={handleDelete}>
+                            location == "/cart" && <>
+                            {
+                                loading ? <Loader /> : 
+                                
+                                <div className="delete" onClick={handleDelete}>
                                 <DeleteIcon />
-                            </div>
+                                </div>
+                            }
+                            </>
                         }
                     </div>
                     <div className="main">

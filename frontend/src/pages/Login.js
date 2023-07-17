@@ -11,6 +11,7 @@ import { signInWithPopup } from 'firebase/auth'
 import { auth, provider } from '../firebase'
 import { Link } from 'react-router-dom'
 import { Button, notification, Space } from 'antd';
+import Loader from '../components/Loader'
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,8 @@ const Login = () => {
 
   const intialValues = { email : "", password : ""}
   const [formValues,setFormValues] = useState(intialValues);
+  const [loading,setLoading] = useState(false);
+  const [maxLen,setMaxLen] = useState(50);
 
     ////////////////////notification
     const [api, contextHolder] = notification.useNotification();
@@ -37,20 +40,35 @@ const Login = () => {
   const handleChange = (e) =>{
     const {name,value} = e.target
 
-    //handling errors
-    setFormErrors(prev =>{
-      return {
-        ...prev,
-        [name] : ""
-      }
-    })
-    setFormValues((prev) =>{
+      //handling errors
+      setFormErrors(prev =>{
+        return {
+          ...prev,
+          [name] : ""
+        }
+      })
+      
+      //////////////
+    const isNumber = /^[0-9]+$/.test(value);
 
-      return {
-        ...prev,
-        [name]: value
-      }
-    })
+    if (isNumber && value.length>10) {
+      setFormValues(prev=>{
+        return {
+          ...prev,
+          "email" : value.slice(0, 10)
+        }
+      })
+    }else{
+      setFormValues((prev) =>{
+
+        return {
+          ...prev,
+          [name]: value
+        }
+      })
+    }
+
+   
   }
 
   // validation
@@ -77,6 +95,11 @@ const Login = () => {
     }else if(values.password.length<6){
       errors.password = "Password too short!"
     }
+
+
+    if (Object.keys(errors).length != 0) {
+      setLoading(false);
+    }
     return errors;
   }
  
@@ -84,6 +107,7 @@ const Login = () => {
   // click on register button
   const handleSubmit = (e) =>{
     e.preventDefault();
+    setLoading(true);
     setFormErrors(validate(formValues));
     setIsSubmit(true); 
   }
@@ -102,11 +126,16 @@ const Login = () => {
          
           msg = "Access Denied: Access Blocked By Admin!"
           openNotificationWithIcon('error')
+
+          setLoading(false);
+
           return;
         }
 
         msg = "Success!"
         openNotificationWithIcon('success')
+
+        setLoading(false);
 
         setTimeout(()=>{
           dispatch(setValue(result.data));
@@ -115,19 +144,22 @@ const Login = () => {
           navigate("/homepage")
         },500)
 
-        // console.log(result.data);
-
-
       }else if(result.status==204){
         msg = "No Such Email Exists!"
         openNotificationWithIcon('warning')
+
+        setLoading(false);
       }else{
         msg = "Wrong Password!"
         openNotificationWithIcon('error')
+
+        setLoading(false);
       }
      } catch (error) {
       msg = "Something Went Wrong!"
       openNotificationWithIcon('error')
+
+      setLoading(false);
      }
      
     }
@@ -153,8 +185,10 @@ const Login = () => {
         openNotificationWithIcon('success')
 
         setTimeout(()=>{
-          navigate("/hompepage");
           dispatch(setValue(result.data));
+          dispatch(setAddress(result.data?.address?.at(0)))
+          dispatch(setBusiness(result.data.business));
+          navigate("/homepage")
         },500)
 
       } catch (error) {
@@ -179,11 +213,14 @@ const Login = () => {
             <form  onSubmit={handleSubmit}>
               <h1>ACCOUNT</h1>
               <div className="inputDetails" >
-              <input type="text" name="email" placeholder='Enter Email/Phn Number..' value={formValues.email} onChange={handleChange}/>
+              <input type="text" name="email" placeholder='Enter Email/Phn Number..' value={formValues.email} onChange={handleChange} maxLength={maxLen}/>
               <p className='error'>{formErrors?.email}</p>
               <input type="password" name="password" placeholder='Enter Your Password...' value={formValues.password} onChange={handleChange}/>
               <p className='error'>{formErrors?.password}</p>
-              <button type="submit">SIGN IN</button>
+              
+              {
+              loading ? <Loader /> : <button type="submit">SIGN IN</button>
+            }
               </div>
               <div className="otherSignInOptions">
             <div onClick={handleGoogleSignIn}>
@@ -191,8 +228,10 @@ const Login = () => {
               <span>Google</span>
             </div>
           </div>
+          <div className="registerFooter">
+          <span>Don't Have An Account?</span><Link to="/register">Sign Up</Link>
+          </div>
             </form>
-            <Link to ="/register">SignUp</Link>
         </div>
 
     </div>

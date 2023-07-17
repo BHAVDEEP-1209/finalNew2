@@ -8,10 +8,13 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { Select, Space } from 'antd';
 import { deleteCartItem, updateOrderStatus } from '../utils/utils';
 import { Button, notification } from 'antd';
+import { useSelector } from 'react-redux';
+import Loader from "../components/Loader"
 
 
 const OrderItem = (props) => {
   const product = props.state.product;
+  const user = useSelector(state=>state.currentUser);
   const baseImgUrl = `http://localhost:5000/images/`
   const image = baseImgUrl + `${product.images[0]}`
   const time = props.state.createdAt;
@@ -20,6 +23,10 @@ const OrderItem = (props) => {
   const Year = new Date(time).getFullYear();
   const navigate = useNavigate();
   const location = useLocation().pathname;
+  const currDate = new Date().getDate();
+  const orderDate = new Date(time).getDate();
+
+  const [loading,setLoading] = useState(false);
 
     ////////////////////notification
     const [api, contextHolder] = notification.useNotification();
@@ -87,6 +94,8 @@ const OrderItem = (props) => {
 
 
   const handleCancelClick=async()=>{
+    setLoading(true);
+
     try {
       const del = await deleteCartItem(props.state.id);
 
@@ -96,13 +105,18 @@ const OrderItem = (props) => {
 
       msg = "Order Cancelled!"
       openNotificationWithIcon('success')
-      
+
+      setLoading(false);
       
     } catch (error) {
+
+      setLoading(false);
       console.log(error);
     }
   
   }
+
+  console.log(props.state.orderStatus);
 
   return (
     <>
@@ -164,8 +178,43 @@ const OrderItem = (props) => {
                     }
                   </>
               }
+              
+             {/* {
+              location!="/profile/history" &&  <>
+              {
+                user?.role=="customer" ?
+                 <>
+                {
+                (((currDate - orderDate) <=1) && props.state.orderStatus!="stock") && <button className='view view2' onClick={handleCancelClick}>Caaaancel</button>
+              }
+                </> :
+                <>
+                  <button className='view view2' onClick={handleCancelClick}>Cancel</button>
+                </>
+              }
+              
+              </>
+             } */}
+
              {
-              location!="/profile/history" &&  <button className='view view2' onClick={handleCancelClick}>Cancel</button>
+              location=="/profile/orders" && <>
+              {
+                loading ? <Loader/> : <button className='view view2' onClick={handleCancelClick}>Cancel</button>
+              }
+              </>
+             }
+
+             {
+              location=="/orders" && <>
+              
+              {
+                ((currDate - orderDate) <=1 && props.state.orderStatus=="stock") &&  <>
+                {
+                  loading ? <Loader /> : <button className='view view2' onClick={handleCancelClick}>Cancel</button>
+                }
+                </>
+              }
+              </>
              }
 
             </div>

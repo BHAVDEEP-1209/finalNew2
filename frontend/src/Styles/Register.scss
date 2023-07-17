@@ -80,12 +80,10 @@
             }
             
             .otherSignInOptions{
-                // border: 1px solid black;
                 display: flex;
                 justify-content: space-evenly;
                 
                 div{
-                    // border: 1px solid red;
                     width: 40%;
                     display: flex;
                     align-items: center;
@@ -119,4 +117,23 @@
         }
     }
    
+}
+
+.registerFooter{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+
+    span{
+        font-family: 'Jost', sans-serif;
+        font-size: 18px;
+        letter-spacing: 1px;
+        font-weight: 500;
+    }
+
+    a{
+        font-family: 'Poppins', sans-serif;
+        font-size: 18px;
+    }
 }

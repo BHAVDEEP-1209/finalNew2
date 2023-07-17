@@ -1,10 +1,8 @@
 const User = require("../models/userModal");
 
-
 // register
 exports.register = async(req,res)=>{
     try {
-        
         const user = await User.findOne({email : req.body.email});
         
         if(user){
@@ -14,11 +12,10 @@ exports.register = async(req,res)=>{
         return res.status(201).json(newUser);
     } catch (error) {
         return res.status(400).send("error while signing up!");
-    }
-    
-    
+    }    
 }
 
+//////////// getting vendor List for admin 
 exports.getVendorsList = async(req,res)=>{
     try {
         console.log("getting!")
@@ -35,19 +32,17 @@ exports.update = async(req,res)=>{
     try {
         const id = req.params.id;
         const newUser = await User.findByIdAndUpdate(id , {...req.body});
-        res.status(201).json(newUser);
+        const user = await User.findById(id);
+
+        res.status(201).json(user);
         
     } catch (error) {
         res.status(500).json("Error while updating user!");
     }
 }
 
-
-
-
 /// login 
-exports.login = async(req,res)=>{
-        
+exports.login = async(req,res)=>{ 
     try {
         const user = await User.findOne({email : req.body.email});
         console.log(user);
@@ -62,8 +57,6 @@ exports.login = async(req,res)=>{
         return res.status(200).json(user);
     } catch (error) {
         return res.status(400).send("error while signing up!");
-    }
-
-   
+    } 
 }
 

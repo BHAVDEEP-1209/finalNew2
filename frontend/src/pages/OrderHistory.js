@@ -41,11 +41,18 @@ const OrderHistory = () => {
         <div className='order'>
             <div className="top">
                 <h1 className='heading'>History</h1>
+                <div className='subTop'>
+                {
+                    <div className="earnings">
+                        <span>Orders: {items.length}</span>
+                    </div>
+                }
                 {
                     user?.role == "vendor" && <div className="earnings">
                         &#x20B9;<span>{total}.00</span>&#x2191;
                     </div>
                 }
+                </div>
             </div>
             <div className="items">
                 {

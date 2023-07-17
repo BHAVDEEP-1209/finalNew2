@@ -68,9 +68,13 @@ body{
 
 //////////////////order
 .order{
-    background-color: #f6f5f3;
+    background-color: #f6f5f3 ;
     padding: 1% 4%;
     min-height: calc(100vh - 110px);
+
+    .cartItem{
+        width: 80% !important;
+    }
 
     .heading{
         font-family: 'Poppins', sans-serif;
@@ -81,7 +85,13 @@ body{
     }
 
     .main2{
-        display: flex;
+        display: flex !important;
+        width: 100% !important;
+        justify-content: space-between !important;
+
+        span{
+            width: 55%;
+        }
     }
 
     .footer2{
@@ -144,12 +154,19 @@ body{
     align-items: center;
     justify-content: space-between;
 
+    .subTop{
+        width: 40%;
+        display: flex !important;
+        gap: 10px !important;
+        justify-content: center;
+    }
+
     .earnings{
         background-color: green;
         height: 60px;
         width: max-content;
         min-width: 200px;
-        margin-right: 90px;
+        // margin-right: 90px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -298,3 +315,4 @@ body{
         // text-decoration: underline;
     }
 }
+

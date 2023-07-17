@@ -21,6 +21,7 @@ import MakeUp from "./pages/MakeUp";
 import Watches from "./pages/Watches";
 import OrderHistory from "./pages/OrderHistory";
 import VendorList from "./components/VendorList";
+import ProfileIndex from "./pages/ProfileIndex";
 
 function App() {
   const isLoggedIn = useSelector(state=>state.isLoggedIn);
@@ -124,7 +125,7 @@ function App() {
         }
         {
           isLoggedIn && <Route path="profile" element={<Profile />}>
-          {/* <Route index element={<Store />} /> */}
+          <Route index element={<ProfileIndex />} />
           <Route path="store" element={<Store />} />
           <Route path="drafts" element={<Drafts />} />
           <Route path="account" element={<Account />} />

@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux'
 import UserModal from '../components/UserModal'
 import axios from 'axios'
 import { Button, notification, Space } from 'antd';
+import Loader from '../components/Loader'
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -28,6 +29,8 @@ const ProductDetail = () => {
   const user = useSelector(state=>state.currentUser);
   const navigate = useNavigate();
   const address = user?.address;
+
+  const [loading,setLoading] = useState(false);
 
    ////////////////////notification
    const [api, contextHolder] = notification.useNotification();
@@ -64,8 +67,11 @@ const ProductDetail = () => {
       openNotificationWithIcon('warning');
       
     }else{
-      const itemId = product._id + user.id;
 
+      setLoading(true);
+
+      const itemId = product._id + user.id;
+  
 
     const cartItem = {
       product : product,
@@ -80,13 +86,18 @@ const ProductDetail = () => {
         msg = "Added To Cart!"
         openNotificationWithIcon('success');
 
+        setLoading(false);
+
     } catch (error) {
+
+        setLoading(false);
         console.log(error);
     }
     }
   }
 
   const handleBuy=async()=>{
+
    if(user?.address==undefined){
 
     msg = "Add Address!"
@@ -113,6 +124,8 @@ const ProductDetail = () => {
 
       return;
     }
+
+    setLoading(true);
     const itemId = product._id + user.id;
 
 
@@ -125,8 +138,12 @@ const ProductDetail = () => {
     }
     try {
         const res = await axios.post("http://localhost:5000/cart/addToCart",cartItem);
+
+        setLoading(false);
         navigate(`/checkout`)
     } catch (error) {
+
+        setLoading(false);
         console.log(error);
     }
   }
@@ -228,8 +245,13 @@ const ProductDetail = () => {
 
               {
                 product.uploadedBy!=user?.email && <>
-                            <button onClick={handleAddToCart}><ShoppingCartIcon />Add</button>
-                        <button onClick={handleBuy}><LocalMallIcon />Buy</button>
+                            {
+                              loading ? <Loader /> : <button onClick={handleAddToCart}><ShoppingCartIcon />Add</button>
+                            }
+                            {
+                              loading ? <Loader /> : <button onClick={handleBuy}><LocalMallIcon />Buy</button>
+                            }
+                        
                 </>
               }
           </div>

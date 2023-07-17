@@ -5,6 +5,8 @@ import UserForm from './UserForm';
 import axios from 'axios';
 import { setValue } from '../slices/userSlice';
 import BusinessForm from './BusinessForm';
+import Loader from "../components/Loader"
+import { Button, notification, Space } from 'antd';
 
 const Account = () => {
   const user = useSelector(state=>state.currentUser);
@@ -23,9 +25,22 @@ const Account = () => {
   const [click,setClick] = useState(false);
   const [click2,setClick2] = useState(false);
   const business = useSelector(state=>state.business);
+
+  const [imageLoading,setImageLoading] = useState(false);
+
+        ////////////////////notification
+        const [api, contextHolder] = notification.useNotification();
+        let ms = useState("");
+        const openNotificationWithIcon = (type) => {
+          api[type]({
+            message: ms,    
+          });
+        };
+        //////////////////////////
   
 
   const handleProfilePic=(e)=>{
+    setImageLoading(true);
     const file = e.target.files[0];
     console.log(file);
     let formData = new FormData();
@@ -39,11 +54,16 @@ const Account = () => {
       headers: { "Content-Type": "multipart/form-data" },
     })
       .then(function (response) {
-        window.alert("image updated");
+        ms = "image updated"
+        openNotificationWithIcon('success')
+
+        setImageLoading(false);
         dispatch(setValue(response.data));
       })
       .catch(function (response) {
         //handle error
+
+        setImageLoading(false);
         console.log(response);
       });
 
@@ -51,11 +71,11 @@ const Account = () => {
   
   return (
     <div className='store'>
+      {contextHolder}
       <div className="heading">
-      
-      <label htmlFor="pic"><img src={image} alt="" style={{objectFit: "Cover"}}/></label>
-      
-      
+      {
+        imageLoading ? <Loader /> : <label htmlFor="pic"><img src={image} alt="" style={{objectFit: "Cover"}}/></label>
+      }
       <input type="file" name="image" id="pic" style={{display :"none"}} onChange={handleProfilePic}/>
       <h1>Account</h1>
       </div>

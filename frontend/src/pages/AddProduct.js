@@ -15,6 +15,8 @@ const AddProduct = () => {
 
   const {id} = useParams();
 
+  const [loading,setLoading] = useState(false);
+
     ////////////////////notification
     const [api, contextHolder] = notification.useNotification();
     let msg = useState("");
@@ -73,12 +75,20 @@ const AddProduct = () => {
     if(!values.stock){
       errors.stock="Enter the stock of Product!"
     }
-    if (!values.images?.length) {
+    if(!values.images?.length){
       errors.images = "Upload 4 Product Images!";
-    }     
+    }else if(values.images.length!=4){
+      errors.images = "Upload 4 Product Images!";
+    }
+    
+    
+    if (Object.keys(errors).length != 0) {
+      setLoading(false);
+    }
     return errors;
   };
 
+  
 
 
   const handleFileChange = (e)=>{
@@ -143,6 +153,8 @@ const AddProduct = () => {
       msg = "Product Added!"
       openNotificationWithIcon('success')
 
+      setLoading(false);
+
       setTimeout(()=>{
         setFormValues(initial)
         navigate("/homepage")
@@ -153,6 +165,8 @@ const AddProduct = () => {
       msg = "Item Updated!"
       openNotificationWithIcon('success')
 
+      setLoading(false);
+
       setTimeout(()=>{
         navigate("/profile/store");
       },500)
@@ -161,6 +175,8 @@ const AddProduct = () => {
      
 
       } catch (error) {
+
+        setLoading(false);
         console.log(error);
       }
     };
@@ -175,17 +191,22 @@ const AddProduct = () => {
 
   const handleEdit=async(e)=>{
     e.preventDefault();
+    setLoading(true);
     try {
       const res = await updateProduct(id,{formValues});
 
       msg = "Item Updated!"
       openNotificationWithIcon('success')
 
+      setLoading(false);
+
       setTimeout(()=>{
         navigate("/profile/store");
       },500)
 
     } catch (error) {
+
+      setLoading(false);
       console.log(error);
     }
     
@@ -202,6 +223,7 @@ const AddProduct = () => {
 
   const handleSubmit =async(e)=>{
     e.preventDefault();
+    setLoading(true);
     
     {
       (id==undefined ) && setFormErrors(validate(formValues));
@@ -243,7 +265,9 @@ const AddProduct = () => {
         <span className='h2'>{formValues?.savedAs}</span>
        </div>
         <SavedAs state={{formValues,setFormValues}}/>
-        <button type="submit">{id!=undefined ? "Edit" : "Submit"}</button>
+        {
+          loading ? <Loader /> : <button type="submit">{id!=undefined ? "Edit" : "Submit"}</button>
+        }
       </form>
 
       <div className="imagesPreview">

@@ -10,8 +10,9 @@ import { auth, provider } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setValue } from "../slices/userSlice";
-import { Link } from 'react-router-dom'
-import { Button, notification, Space } from 'antd';
+import { Link } from "react-router-dom";
+import { Button, notification, Space } from "antd";
+import Loader from "../components/Loader";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -19,13 +20,14 @@ const Register = () => {
 
   const intialValues = { role: "", name: "", email: "", password: "" };
   const [formValues, setFormValues] = useState(intialValues);
+  const [loading, setLoading] = useState(false);
 
   ////////////////////notification
   const [api, contextHolder] = notification.useNotification();
   let msg = useState("");
   const openNotificationWithIcon = (type) => {
     api[type]({
-      message: msg,    
+      message: msg,
     });
   };
   //////////////////////////
@@ -44,12 +46,25 @@ const Register = () => {
         [name]: "",
       };
     });
-    setFormValues((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
+
+    //////////////
+    const isNumber = /^[0-9]+$/.test(value);
+
+    if (isNumber && value.length > 10) {
+      setFormValues((prev) => {
+        return {
+          ...prev,
+          email: value.slice(0, 10),
+        };
+      });
+    } else {
+      setFormValues((prev) => {
+        return {
+          ...prev,
+          [name]: value,
+        };
+      });
+    }
   };
 
   // validation
@@ -70,9 +85,9 @@ const Register = () => {
     } else {
       const ch = values.email.at(0);
       if (ch >= "0" && ch <= "9") {
-          if(values.email.length!=10){
-            errors.email = "Invalid Phn Number!";
-          }
+        if (values.email.length != 10) {
+          errors.email = "Invalid Phn Number!";
+        }
       } else {
         if (!regex.test(values.email)) {
           errors.email = "Invalid Email Address!";
@@ -85,17 +100,21 @@ const Register = () => {
     } else if (values.password.length < 6) {
       errors.password = "Password too short!";
     }
+
+    if (Object.keys(errors).length != 0) {
+      setLoading(false);
+    }
+
     return errors;
   };
 
   // click on register button
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     setFormErrors(validate(formValues));
     setIsSubmit(true);
   };
-
-
 
   // validates erros and calls the function when there is no error
   useEffect(() => {
@@ -103,18 +122,25 @@ const Register = () => {
       try {
         const result = await SignUp(formValues);
         if (result.status == 201) {
-          msg = "Success!"
-          openNotificationWithIcon('success')
-          setTimeout(()=>{
+          msg = "Success!";
+          openNotificationWithIcon("success");
+
+          setLoading(false);
+
+          setTimeout(() => {
             navigate("/login");
-          },500)
+          }, 500);
         } else {
-          msg = "Already Email Exists!"
-          openNotificationWithIcon('warning');
+          msg = "Already Email Exists!";
+          openNotificationWithIcon("warning");
+
+          setLoading(false);
         }
       } catch (error) {
-        msg = "Error While Signing Up!"
-        openNotificationWithIcon('error');
+        msg = "Error While Signing Up!";
+        openNotificationWithIcon("error");
+
+        setLoading(false);
       }
     };
     if (Object.keys(formErrors).length === 0 && isSubmit) {
@@ -127,7 +153,9 @@ const Register = () => {
       {contextHolder}
       <Navbar />
       <Space>
-      <Button onClick={() => openNotificationWithIcon('success')}>Success</Button>
+        <Button onClick={() => openNotificationWithIcon("success")}>
+          Success
+        </Button>
       </Space>
       <div className="imgContainer">
         <img
@@ -166,11 +194,13 @@ const Register = () => {
             <p className="error">{formErrors?.password}</p>
             <RoleRadio state={{ formValues, setFormValues }} />
             <p className="error">{formErrors?.role}</p>
-            <button type="submit">REGISTER</button>
+            {loading ? <Loader /> : <button type="submit">REGISTER</button>}
           </div>
-
+          <div className="registerFooter">
+            <span>Already Have An Account?</span>
+            <Link to="/">Sign In</Link>
+          </div>
         </form>
-        <Link to="/">Sign In</Link>
       </div>
     </div>
   );

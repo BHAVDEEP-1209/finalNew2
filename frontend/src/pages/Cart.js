@@ -51,9 +51,10 @@ const Cart = () => {
           navigate(`/profile/account`)
         }, 800)
   
-        return;
+      }else{
+        navigate(`/checkout`)
       }
-      navigate(`/checkout`)
+      
     }
   }
 
@@ -101,9 +102,11 @@ const Cart = () => {
             }
           </div>
           <div className="cartTotal">
-            <button onClick={handleProceedToBuy}>
+            
+               <button onClick={handleProceedToBuy}>
               Proceed to Buy
             </button>
+            
           </div>
         </div>
       </div>

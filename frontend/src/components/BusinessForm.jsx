@@ -5,6 +5,7 @@ import { updateUser } from '../utils/utils';
 import { setAddress, setBusiness, setValue } from '../slices/userSlice';
 import axios from 'axios';
 import { Button, notification, Space } from 'antd';
+import Loader from "../components/Loader"
 
 const BusinessForm = (props) => {
     const user = useSelector(state=>state.currentUser);
@@ -14,6 +15,9 @@ const BusinessForm = (props) => {
     const [name,setName] = useState("");
     const click2 = props.state?.click2;
     const dispatch = useDispatch();
+
+    const [loading,setLoading] = useState(false);
+    const [imageLoading,setImageLoading] = useState(false);
 
       ////////////////////notification
   const [api, contextHolder] = notification.useNotification();
@@ -39,6 +43,9 @@ const BusinessForm = (props) => {
 
     const handleSave=async()=>{
         //validation
+
+        setLoading(true);
+
         const id = user.id
         const add = {
             email : user.email,
@@ -47,14 +54,24 @@ const BusinessForm = (props) => {
         try {
             const res = await updateUser(id,add);
             dispatch(setBusiness(res.data.business));
+            console.log(res.data.business);
+            setLoading(false);
             props.state?.setClick2(!click2);
+
+            
         } catch (error) {
+          setLoading(false);
             console.log(error);
         }
+
+        
     }
 
 
     const handleProfilePic=(e)=>{
+
+        setImageLoading(true);
+
         const file = e.target.files[0];
        
         let formData = new FormData();
@@ -73,10 +90,13 @@ const BusinessForm = (props) => {
             msg = "image updated"
             openNotificationWithIcon('success')
 
+            setImageLoading(false);
+
             dispatch(setBusiness(response.data.business));
           })
           .catch(function (response) {
             //handle error
+            setImageLoading(false);
             console.log(response);
           });
     
@@ -88,7 +108,9 @@ const BusinessForm = (props) => {
         <h1>Edit Business Details</h1>
         <div className='div'>
         <span>Brand Logo</span>
-        <input type="file" name="" id="" onChange={handleProfilePic} />
+        {
+          imageLoading ? <Loader /> :  <input type="file" name="" id="" onChange={handleProfilePic} />
+        }
         </div>
         <div className='div'>
         <span>Brand Name</span>
@@ -105,7 +127,9 @@ const BusinessForm = (props) => {
                 setFormvalues({});
                 props.state?.setClick2(!click2);
             }}>CANCEL</button>
-            <button onClick={handleSave}>SAVE</button>
+            {
+              loading ? <Loader /> : <button onClick={handleSave}>SAVE</button>
+            }
         </div>
     </div>
   )

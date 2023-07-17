@@ -26,19 +26,17 @@ router.post("/login",authController.login);
 router.post("/update/:id",authController.update);
 router.get("/getVendorsList",authController.getVendorsList);
 
+/// updating Profile Pic and Business Logo
 router.post("/updateImage",upload.single("image"),async(req,res)=>{
     const id = req.body.id;
     const pic = req.body.pic;
     const image = req.file.filename;
-
     try {
-        
         const user = await User.findById(id);
         
         if(!user){
             return res.status(204).json("No such email exists");
         }
-
         if(pic=="profile"){
             const newUser = await User.findByIdAndUpdate(id,{image : image });
         }else{
@@ -50,8 +48,6 @@ router.post("/updateImage",upload.single("image"),async(req,res)=>{
     } catch (error) {
         return res.status(400).send("error while updating User!");
     }
-
-
 })
 
 

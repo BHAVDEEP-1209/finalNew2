@@ -8,6 +8,7 @@ import CartItem from '../components/CartItem'
 import { useNavigate, useParams } from 'react-router-dom'
 import Navbar from "../components/Navbar"
 import { Button, notification, Space } from 'antd';
+import Loader from "../components/Loader"
 
 const Checkout = () => {
 
@@ -19,6 +20,8 @@ const Checkout = () => {
 
   const user = useSelector(state => state.currentUser);
   const [cartItems, setCartItems] = useState([]);
+
+  const [loading,setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -97,18 +100,23 @@ const Checkout = () => {
   }, [])
 
   const placeOrder = () => {
+    setLoading(true);
     const get = async () => {
       try {
         const items = await PlaceOrders(user.id);
         
         msg = "Order Placed!"
         openNotificationWithIcon('success')
+        
+        setLoading(false);
 
         setTimeout(()=>{
           navigate("/orders")
         },500)
         
       } catch (error) {
+
+        setLoading(false);
         console.log(error);
       }
     }
@@ -159,7 +167,9 @@ const Checkout = () => {
             </div>
           </div>
           <h1 className='cartTotal'>Order total: {cartTotal}</h1>
-          <button onClick={placeOrder} className='button2'>Place Your Order</button>
+          {
+            loading ? <Loader /> : <button onClick={placeOrder} className='button2'>Place Your Order</button>
+          }
         </div>
       </div>
     </>
