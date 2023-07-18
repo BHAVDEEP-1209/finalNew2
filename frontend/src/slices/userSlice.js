@@ -15,7 +15,8 @@ const initialState = {
     name : "",
     desc : "",
   },
-  isLoggedIn : false
+  isLoggedIn : false,
+  adminId : "",
 }
 
 export const userSlice = createSlice({
@@ -46,10 +47,13 @@ export const userSlice = createSlice({
         state.currentUser = {};
         state.isLoggedIn = false;
         state.business={};
+    },
+    setAdminId : (state,action)=>{
+      state.adminId = action.payload;
     }
   },
 })
 
-export const { setValue , handleLogOut , setAddress , setBusiness} = userSlice.actions
+export const { setValue , handleLogOut , setAddress , setBusiness , setAdminId} = userSlice.actions
 
 export default userSlice.reducer

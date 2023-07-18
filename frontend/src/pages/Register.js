@@ -83,12 +83,20 @@ const Register = () => {
     if (!values.email) {
       errors.email = "Input required!";
     } else {
-      const ch = values.email.at(0);
-      if (ch >= "0" && ch <= "9") {
+      // const ch = values.email.at(0);
+      // if (ch >= "0" && ch <= "9") {
+      //   if (values.email.length != 10) {
+      //     errors.email = "Invalid Phn Number!";
+      //   }
+      // }
+
+      const isNumber = /^[0-9]+$/.test(values.email);
+
+      if(isNumber){
         if (values.email.length != 10) {
-          errors.email = "Invalid Phn Number!";
+              errors.email = "Invalid Phn Number!";
         }
-      } else {
+      }else {
         if (!regex.test(values.email)) {
           errors.email = "Invalid Email Address!";
         }

@@ -42,6 +42,10 @@ const productSchema = new mongoose.Schema({
         type : String,
         required : true
     },
+    uploadedByName : {
+        type : String,
+        required : true
+    },
     reviews : [
         {
             name : {

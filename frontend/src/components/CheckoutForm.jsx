@@ -53,7 +53,6 @@ const CheckoutForm = () => {
         setFormErrors(validate(formValues));
         setIsSubmit(true);
 
-        console.log(formValues);
     }
 
 
@@ -63,7 +62,7 @@ const CheckoutForm = () => {
         const id = user.id
         
         try {
-            const res = await updateUser(id,{address : [formErrors]});
+            const res = await updateUser(id,{address : [formValues]});
             dispatch(setAddress(formValues)); 
             setFormvalues(formValues);
             setClick(false);
@@ -107,7 +106,7 @@ const CheckoutForm = () => {
                 setFormErrors({});
                 setClick(false);
             }}>CANCEL</button>
-            <button onClick={handleSave}>SAVE</button>
+            <button onClick={handleSave}>EDIT</button>
         </div>
         {/* button */}
     </div>

@@ -158,6 +158,34 @@
                 }
 
             }
+
+            .salesInfo{
+
+                padding-top: 10px;
+
+                .ordersInfo{
+
+                    display: flex;
+                    // border: 1px solid red;
+                    align-items: center;
+                    gap: 10px;
+                    margin-top: 10px;
+
+                     h1{
+                        font-family: 'Jost', sans-serif;
+                        font-size: 18px;
+                        letter-spacing: 1px;
+                        font-weight: 500;
+                     }
+
+                     img{
+                        width: 40px;
+                        height: 40px;
+                        object-fit: cover;
+                     }
+
+                }
+            }
         }
     }
 }

@@ -22,6 +22,9 @@ import Watches from "./pages/Watches";
 import OrderHistory from "./pages/OrderHistory";
 import VendorList from "./components/VendorList";
 import ProfileIndex from "./pages/ProfileIndex";
+import AllOrders from "./pages/AllOrders"
+import AllOrdersHistory from "./pages/AllOrdersHistory"
+import ChatPage from "./pages/ChatPage";
 
 function App() {
   const isLoggedIn = useSelector(state=>state.isLoggedIn);
@@ -70,6 +73,10 @@ function App() {
     {
       path : "/orders",
       element : <OrdersPage />
+    },
+    {
+      path : "/chat",
+      element : <ChatPage />
     },
     {
       path : "/watches",
@@ -132,6 +139,8 @@ function App() {
           <Route path="orders" element={<Orders />} />
           <Route path="history" element={<OrderHistory />} />
           <Route path="vendors" element={<VendorList />} />
+          <Route path="allOrders" element={<AllOrders />} />
+          <Route path="allOrdersHistory" element={<AllOrdersHistory />} />
         </Route>
         }
 

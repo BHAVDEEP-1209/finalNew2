@@ -60,3 +60,14 @@ exports.login = async(req,res)=>{
     } 
 }
 
+
+//// getAdminId
+exports.getAdminId = async(req,res)=>{
+    try {
+        const id = await User.findOne({role : "admin"});
+        res.status(200).json(id);
+    } catch (error) {
+        res.status(500).json("Error while getting admin id!");
+    }
+}
+

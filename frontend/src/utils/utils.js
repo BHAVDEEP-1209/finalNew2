@@ -15,10 +15,10 @@ export const getVendorsList = () =>(axios.get("http://localhost:5000/auth/getVen
 //getVendorsList
 
 /// get Admin Orders
-export const getAdminOrders = () =>(axios.get("http://localhost:5000/cart/getAdminOrders"));
+export const getAdminOrders = (values) =>(axios.post("http://localhost:5000/cart/getAdminOrders",values));
 
 // getting order History for admin
-export const getAdminOrdersHistory = () =>(axios.get("http://localhost:5000/cart/getAdminOrdersHistory"));
+export const getAdminOrdersHistory = (values) =>(axios.post("http://localhost:5000/cart/getAdminOrdersHistory",values));
 
 
 ///////////
@@ -67,3 +67,15 @@ export const updateProduct = (id,values) =>(axios.post(`http://localhost:5000/pr
 // getOrderHistory
 // getHistory
 export const getHistory = (values) =>(axios.post(`http://localhost:5000/cart/getHistory`,values))
+
+/// const get Admin Id 
+export const getAdminId = ()=>(axios.get(`http://localhost:5000/auth/getAdminId`))
+
+/// send Message
+export const sendMessage = (values)=>(axios.post("http://localhost:5000/chat/sendMessage",values))
+
+/// get chat
+export const getMessages = (id)=>(axios.get(`http://localhost:5000/chat/getMessages/${id}`))
+
+/// get users list 
+export const getUsers = ()=>(axios.get("http://localhost:5000/chat/getAllUsers"));

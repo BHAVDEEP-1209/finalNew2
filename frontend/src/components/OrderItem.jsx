@@ -60,7 +60,7 @@ const OrderItem = (props) => {
       openNotificationWithIcon('success')
 
       if(value=="delivered"){
-        props?.st(prev=>{
+        props?.st.setClick(prev=>{
           return !prev;
         })
       }
@@ -134,11 +134,14 @@ const OrderItem = (props) => {
             </div>
             <span>ID <span className='orderId'>#{props.state._id}</span></span>
           </div>
+          <div className="seller">
+            <span>Seller: <span className='span2'>{(product?.uploadedByName).toUpperCase()}</span></span>
+          </div>
           <div className="main main2">
             <span>Description: {product?.description}</span>
             <div className="buttons">
               {
-                location == "/profile/orders" ? <>
+                location == "/profile/orders" ? <div className='orderStatus'>
                   <Space wrap className='pos'>
                     <Select
                       defaultValue={props.state.orderStatus}
@@ -167,13 +170,13 @@ const OrderItem = (props) => {
                     />
                   </Space>
 
-                </>
+                </div>
                   :
                   <>
                     {
                       location != "/profile/history" && <>
-                        <button className='view' onClick={handleView}><VisibilityIcon className='icon' />view</button>
-                        <button className='view view3' onClick={showModal}><GpsFixedIcon className='icon' />track order</button>
+                        <button className='view' onClick={handleView}><VisibilityIcon className='icon'/>view</button>
+                        <button className='view view3' onClick={showModal}><GpsFixedIcon className='icon'/>track order</button>
                       </>
                     }
                   </>
@@ -205,6 +208,39 @@ const OrderItem = (props) => {
              }
 
              {
+              location=="/profile/allOrders" && <>
+                    <Space wrap >
+                    <Select
+                      defaultValue={props.state.orderStatus}
+                      style={{
+                        width: 120,
+                      }}
+                      onChange={handleChange}
+                      options={[
+                        {
+                          value: 'stock',
+                          label: 'Stock',
+                        },
+                        {
+                          value: 'dispatch',
+                          label: 'Dispatch',
+                        },
+                        {
+                          value: 'way',
+                          label: 'On Way',
+                        },
+                        {
+                          value: 'delivered',
+                          label: 'Delivered',
+                        },
+                      ]}
+                    />
+                  </Space>
+              <button className='view view2' onClick={handleCancelClick} style={{width : "80px"}}>Cancel</button>
+              </>
+             }
+
+             {
               location=="/orders" && <>
               
               {
@@ -214,6 +250,8 @@ const OrderItem = (props) => {
                 }
                 </>
               }
+
+
               </>
              }
 
@@ -239,7 +277,12 @@ const OrderItem = (props) => {
         <div className="track">
           <div className="trackHeader">
             <span className='title'>Order<span style={{ color: "blue" }} className='id'>#{props.state._id}</span></span>
-            <span className='delivery'><AirplanemodeActiveIcon />estimated delivery time {date}-{Month}-{Year}</span>
+            {
+              (props.state.orderStatus=="delivered") ?  <span className='delivery'>Delivered!</span>
+              :
+              <span className='delivery'><AirplanemodeActiveIcon />estimated delivery time {date}-{Month}-{Year}</span>
+            }
+            
 
           </div>
           <div className="trackMain">

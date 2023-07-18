@@ -73,7 +73,7 @@ body{
     min-height: calc(100vh - 110px);
 
     .cartItem{
-        width: 80% !important;
+        width: 100% !important;
     }
 
     .heading{
@@ -84,13 +84,29 @@ body{
         margin-bottom: 10px;
     }
 
+    .seller{
+        padding-left: 10px;
+
+        span{
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            color: #9B9B9B;
+
+            .span2{
+                text-decoration: underline;
+                letter-spacing: 1px;
+
+            }
+        }
+    }
+
     .main2{
         display: flex !important;
         width: 100% !important;
-        justify-content: space-between !important;
+        justify-content: flex-start !important;
 
         span{
-            width: 55%;
+            width: 75%;
         }
     }
 
@@ -120,10 +136,16 @@ body{
     }
 
     .buttons{
-        width: 320px;
+        // width: 320px;
+        width: max-content !important;
+        gap: 10px;
         display: flex;
         justify-content: space-between;
         margin-bottom: 10px;
+
+        .orderStatus{
+            margin-right: 110px !important;
+        }
 
         .view{
             padding: 5px 8px;
@@ -136,6 +158,11 @@ body{
             font-family: 'Montserrat', sans-serif;
             letter-spacing: 1px;
             font-size: 16px;
+            width: 150px;
+            display: flex;
+            justify-content: center;
+            width: 80px;
+
             .icon{
                 font-size: 16px;
             }
@@ -316,3 +343,44 @@ body{
     }
 }
 
+///////// global delivery css!
+.delivery{
+    color: green;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'Jost', sans-serif;
+}
+
+
+
+.seller{
+    padding-left: 10px;
+
+    span{
+        font-family: 'Poppins', sans-serif;
+        font-size: 16px;
+        color: #9B9B9B;
+
+        .span2{
+            text-decoration: underline;
+            letter-spacing: 1px;
+
+        }
+    }
+}
+
+/////////////// chat page
+.chat{
+    display: flex;
+
+    .left{
+        width: 30%;
+        border-right: 1px solid red;
+        height: 100vh;
+    }
+
+    .right{
+        
+    }
+}

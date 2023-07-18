@@ -16,20 +16,24 @@ const OrderHistory = () => {
         setTotal(0);
         const get = async () => {
             try {
-                if (user.role == "vendor") {
-                    const res = await getHistory({ email: user.email });
-                    setItems(res.data);
-                    let t = 0;
-                    {
-                        res.data?.map((ele) => {
-                            t = t + (Number(ele.product.price) * Number(ele.quantity));
-                        })
-                    }
-                    setTotal(t);
-                }else{
-                    const res = await getAdminOrdersHistory();
-                    setItems(res.data);
-                }
+                /// testing for vendor orders history
+                // if (user.role == "vendor") {
+                //     const res = await getHistory({ email: user.email });
+                //     setItems(res.data);
+                //     let t = 0;
+                //     {
+                //         res.data?.map((ele) => {
+                //             t = t + (Number(ele.product.price) * Number(ele.quantity));
+                //         })
+                //     }
+                //     setTotal(t);
+                // }else{
+                //     const res = await getAdminOrdersHistory();
+                //     setItems(res.data);
+                // }
+
+                const res = await getHistory({ email: user.email });
+                setItems(res.data);
 
             } catch (error) {
                 console.log(error);
@@ -47,11 +51,20 @@ const OrderHistory = () => {
                         <span>Orders: {items.length}</span>
                     </div>
                 }
-                {
+                {/* {
                     user?.role == "vendor" && <div className="earnings">
                         &#x20B9;<span>{total}.00</span>&#x2191;
                     </div>
+                } */}
+
+                {/* testing for vendor only  */}
+
+                {
+                    <div className="earnings">
+                        &#x20B9;<span>{total}.00</span>&#x2191;
+                    </div>
                 }
+
                 </div>
             </div>
             <div className="items">

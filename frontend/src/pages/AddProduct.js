@@ -28,7 +28,7 @@ const AddProduct = () => {
     //////////////////////////
 
   const user = useSelector(state=>state?.currentUser);
-  const initial = {category : "watches" , savedAs : "product" ,name : "" , description : "", price : "", stock : "" , uploadedBy : user?.email}
+  const initial = {category : "watches" , savedAs : "product" ,name : "" , description : "", price : "", stock : "" , uploadedBy : user?.email , uploadedByName : user?.name}
   const [formValues,setFormValues] = useState(initial);
   const baseImgUrl = `http://localhost:5000/images/`
   const navigate = useNavigate();
@@ -159,6 +159,7 @@ const AddProduct = () => {
         setFormValues(initial)
         navigate("/homepage")
       },500)
+      
      }else{
       const res = await updateProduct(id,{formValues});
 

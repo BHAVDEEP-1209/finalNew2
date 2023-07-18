@@ -8,18 +8,23 @@ import { Empty } from 'antd'
 const Orders = () => {
   const user = useSelector(state=>state.currentUser);
   const [items,setItems] = useState([]);
-  const [change,setChange] = useState(false);
+  const [change,setClick] = useState(false);
 
   useEffect(()=>{
     const get=async()=>{
       try {
-        if(user.role=="vendor"){
-          const res = await getVendorOrders({email : user?.email})
-          setItems(res.data);
-        }else{
-          const res = await getAdminOrders()
-          setItems(res.data);
-        }
+        /// testing for vendor orders
+        // if(user.role=="vendor"){
+        //   const res = await getVendorOrders({email : user?.email})
+        //   setItems(res.data);
+        // }else{
+        //   const res = await getAdminOrders()
+        //   setItems(res.data);
+        // }
+
+        const res = await getVendorOrders({email : user?.email})
+        setItems(res.data);
+
       } catch (error) {
         console.log(error);
       }
@@ -32,7 +37,7 @@ const Orders = () => {
     <div className="items">
       {
         items?.map((ele,ind)=>{
-          return <OrderItem state={ele} key={ind} st={setChange}/>
+          return <OrderItem state={ele} key={ind} st={{setClick}}/>
         })
       }
       {

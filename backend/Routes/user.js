@@ -25,6 +25,7 @@ router.post("/register",authController.register);
 router.post("/login",authController.login);
 router.post("/update/:id",authController.update);
 router.get("/getVendorsList",authController.getVendorsList);
+router.get("/getAdminId",authController.getAdminId);
 
 /// updating Profile Pic and Business Logo
 router.post("/updateImage",upload.single("image"),async(req,res)=>{

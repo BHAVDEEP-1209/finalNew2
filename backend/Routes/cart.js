@@ -17,7 +17,6 @@ router.post("/addToCart",async(req,res)=>{
         }
             const cartItem = await Cart.create({...data});
             res.status(201).json(cartItem);
-
        }
 
      catch (error) {
@@ -127,21 +126,21 @@ router.post("/getHistory",async(req,res)=>{
 
 
 ///////////////get admin Orders
-// get vendor orders
-router.get("/getAdminOrders",async(req,res)=>{
+// get admin orders
+router.post("/getAdminOrders",async(req,res)=>{
     try {
-        const items = await Cart.find({purchasedAs : "order" , orderStatus : { $ne : "delivered" }});
+        const items = await Cart.find({purchasedAs : "order" , orderStatus : { $ne : "delivered" } , purchasedBy : { $ne : req.body.id} , "product.uploadedBy" : {  $ne : req.body.email } });
         res.status(200).json(items);
     } catch (error) {
         res.status(500).json("Error while getting data!");
     }
 })
 
-
-// get vendor orders
-router.get("/getAdminOrdersHistory",async(req,res)=>{
+ 
+// get admin orders history
+router.post("/getAdminOrdersHistory",async(req,res)=>{
     try {
-        const items = await Cart.find({purchasedAs : "order" , orderStatus : "delivered" });
+        const items = await Cart.find({purchasedAs : "order" , orderStatus :  "delivered" , purchasedBy : { $ne : req.body.id} , "product.uploadedBy" : {  $ne : req.body.email } });
         res.status(200).json(items);
     } catch (error) {
         res.status(500).json("Error while getting data!");

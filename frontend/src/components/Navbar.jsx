@@ -14,12 +14,26 @@ const Navbar = () => {
       <div className='nav'>
         <img src={logo} alt="" onClick={()=>navigate("/homepage")}/>
         <div className="icons">
-        <PersonIcon className='icon' onClick={()=>navigate("/profile")}/>
-        <LocalShippingIcon className='icon' onClick={()=>navigate("/orders")}/>
-        <LocalMallIcon className='icon' onClick={()=>navigate("/cart")}/>
-        
+
+        <div className="navItem" onClick={()=>navigate("/profile")}>
+          <span>PROFILE</span>
+        <PersonIcon className='icon'/>
         </div>
+
+        <div className="navItem" onClick={()=>navigate("/orders")}>
+          <span>ORDERS</span>
+          <LocalShippingIcon className='icon'/>
+        </div>
+
+        <div className="navItem" onClick={()=>navigate("/cart")}>
+          <span>CART</span>
+        <LocalMallIcon className='icon'/>
+        </div>
+                
+        </div>
+
     </div>
+
     <div className="categories">
       <div>
       <Link to="/watches">WATCHES</Link>
