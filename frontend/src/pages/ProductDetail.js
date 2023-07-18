@@ -271,7 +271,11 @@ const ProductDetail = () => {
             )}
 
             {/* sales Info */}
-            <div className="salesInfo">
+
+            {
+              product.uploadedBy == user?.email 
+              &&
+              <div className="salesInfo">
               <div className="ordersInfo">
                 <img src={orders} alt="" />
                 <h1 >No Of Orders:</h1>
@@ -284,7 +288,11 @@ const ProductDetail = () => {
                 <span>{product?.Orders * product?.price}</span>
               </div>
             </div>
-            {/* sales Info */}
+            
+            }
+
+            {/* salesInfo */}
+            
           </div>
 
         </div>

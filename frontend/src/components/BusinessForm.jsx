@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import "../Styles/UserForm.scss"
 import { useDispatch, useSelector } from 'react-redux'
 import { updateUser } from '../utils/utils';
@@ -29,6 +29,11 @@ const BusinessForm = (props) => {
   };
   //////////////////////////
 
+
+    // validation fields
+    const [formErrors, setFormErrors] = useState({});
+    const [isSubmit, setIsSubmit] = useState(false);
+
     const handleChange = (e)=>{
         const {name,value} = e.target;
 
@@ -41,32 +46,35 @@ const BusinessForm = (props) => {
     }
 
 
-    const handleSave=async()=>{
-        //validation
+      // validation
+  const validate = (values) => {
+    const errors = {};
 
-        setLoading(true);
-
-        const id = user.id
-        const add = {
-            email : user.email,
-            business : {...formValues, logo : business?.logo}
-        }
-        try {
-            const res = await updateUser(id,add);
-            dispatch(setBusiness(res.data.business));
-            console.log(res.data.business);
-            setLoading(false);
-            props.state?.setClick2(!click2);
-
-            
-        } catch (error) {
-          setLoading(false);
-            console.log(error);
-        }
-
-        
+    if (!values.brandName) {
+      errors.brandName = "Brand Name required!";
+    }else if(values.brandName.length>30){
+      errors.brandName = "Invalid Brand Name : Too Long!";
+    }
+    if (!values.brandDescription) {
+      errors.brandDescription = "Brand Description required!";
+    }else if(values.brandDescription.length>50){
+      errors.brandDescription = "Invalid Brand Description : Too Long!";
     }
 
+    if (Object.keys(errors).length != 0) {
+      setLoading(false);
+    }
+
+    return errors;
+  };
+
+
+    const handleSave=async()=>{
+        //validation
+        setFormErrors(validate(formValues));
+        setIsSubmit(true);
+        setLoading(true);
+    }
 
     const handleProfilePic=(e)=>{
 
@@ -99,8 +107,36 @@ const BusinessForm = (props) => {
             setImageLoading(false);
             console.log(response);
           });
-    
       }
+
+// validates erros and calls the function when there is no error
+  useEffect(() => {
+    const setData = async () => {
+    const id = user.id
+    const add = {
+        email : user.email,
+        business : {...formValues, logo : business?.logo}
+    }
+    try {
+        const res = await updateUser(id,add);
+        dispatch(setBusiness(res.data.business));
+        console.log(res.data.business);
+        setLoading(false);
+        props.state?.setClick2(!click2);
+
+        
+    } catch (error) {
+      setLoading(false);
+        console.log(error);
+    }
+    };
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+      setData();
+    }else{
+      setLoading(false);
+    }
+  }, [formErrors]);
+
 
   return (
     <div className='formContainer'>
@@ -115,10 +151,12 @@ const BusinessForm = (props) => {
         <div className='div'>
         <span>Brand Name</span>
         <input type="text" name="brandName" id="" value={formValues?.brandName} onChange={handleChange} placeholder='Enter Your Brand Name...'/>
+        <p className="error">{formErrors?.brandName}</p>
         </div>
         <div className='div'>
         <span>Brand Description</span>
         <input type="text" name="brandDescription" id="" placeholder='Tell Us About Your Brand ...' onChange={handleChange} value={formValues?.brandDescription} className='brandDescription'/>
+        <p className="error">{formErrors?.brandDescription}</p>
 
         </div>
 

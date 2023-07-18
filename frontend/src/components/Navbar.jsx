@@ -6,14 +6,22 @@ import { useNavigate } from 'react-router-dom';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import {Link} from "react-router-dom"
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 
 const Navbar = () => {
   const navigate = useNavigate();
   return (
     <div className="navContainer">
       <div className='nav'>
+        <div className="img">
         <img src={logo} alt="" onClick={()=>navigate("/homepage")}/>
+        </div>
         <div className="icons">
+
+        <div className="navItem" onClick={()=>navigate("/chat")}>
+          <span style={{width: "150px"}}>CUSTOMER CARE</span>
+        <SupportAgentIcon className='icon'/>
+        </div>
 
         <div className="navItem" onClick={()=>navigate("/profile")}>
           <span>PROFILE</span>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { getAdminId, sendMessage } from "../utils/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { setAdminId } from "../slices/userSlice";
+import send from "../assets/send.png"
 
 const Input = (props) => {
   const dispatch = useDispatch();
@@ -11,6 +12,10 @@ const Input = (props) => {
   const img = user?.image ? user?.image : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
 
   const handleClick = async () => {
+
+    if(input==""){
+      return;
+    }
     try {
 
   const msg = {
@@ -40,16 +45,24 @@ console.log(error);
 }
   }
 
+  const handleKeyDown=(e)=>{
+    {
+      e.code=="Enter" && handleClick();
+    }
+  }
+
 
 
   return (
-    <div>
+    <div className="input">
       <input
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
+        placeholder="Type Something..."
+        onKeyDown={handleKeyDown}
       />
-      <button onClick={handleClick}>send Message</button>
+      <div onClick={handleClick} className="send"><img src={send} alt="" /></div>
     </div>
   );
 };

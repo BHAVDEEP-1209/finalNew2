@@ -5,6 +5,9 @@ import { setAdminId } from "../slices/userSlice";
 import { Empty } from "antd";
 import UserComponent from "../components/UserComponent";
 import Message from "../components/Message";
+import Navbar from "../components/Navbar"
+import customerCare from "../assets/customerCare.png"
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 
 const ChatPage = () => {
   const [input, setInput] = useState("");
@@ -16,6 +19,7 @@ const ChatPage = () => {
   const [messages,setMessages] = useState([]);
   const [users,setUsers] = useState([]);
   const [currentId,setCurrentId] = useState("");
+  const [admininfo ,setAdminInfo] = useState("");
 
 
   useEffect(()=>{
@@ -23,13 +27,12 @@ const ChatPage = () => {
         try {
           const adminId = await getAdminId();
           setCurrentId(adminId.data._id+user?.id);
+          setAdminInfo(adminId.data);
         } catch (error) {
             console.log(error);
         }
     }
-
-    console.log("curr",currentId);
-    
+   
     // for admin 
     const get2 =async()=>{
         try {
@@ -48,23 +51,53 @@ const ChatPage = () => {
 
   },[click])
 
-  console.log(currentId);
 
   return (
-    <div className="chat">
+   <>
+   <Navbar />
+   <div className="chat">
         <div className="left">
+            <div className="chatHeader">
+            <h1>CUSTOMER CARE!</h1>
+            <img src={customerCare} alt="" />
+            </div>
         {
+            user?.role=="admin" ? <>
+            {
             users?.map((ele)=>{
-                return <UserComponent state={ele} st={{setCurrentId}}/>
+                return <UserComponent state={ele} st={{setCurrentId , setClick}}/>
             })
         }
+            </>
+            :
+            <>
+                <UserComponent />
+                <div className="slogan">
+                    <div className="sloganDiv" style={{width: "80%",height: "100%"}}>
+                    <SupportAgentIcon className="sloganIcon"/>
+                    <h1 className="sloganText" style={{fontSize: "25px",lineHeight: "3rem"}}>Customer Satisfaction is worthless. Customer loyalty is priceless.</h1>
+                    </div>
+                </div>
+            </>
+        }
+
+       
         </div>
         <div className="right">
+            {
+                (currentId=="" && user?.role=="admin") && 
+                <div className="slogan">
+                    <div className="sloganDiv">
+                    <h1 className="sloganText">Customer Satisfaction is worthless.Customer loyalty is priceless.</h1>
+                    </div>
+                </div>
+            }
             {
                 currentId!="" && <Message state={currentId}/>
             }
         </div>
     </div>
+   </>
   );
 };
 

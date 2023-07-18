@@ -6,10 +6,17 @@
     background-color: #faf9f8;
     align-items: center;
 
+    .img{
+        display: flex;
+        width: 60%;
+        justify-content: flex-end;
+    }
+
     img{
         height: 30px;
-        width: 100%;
+        width: 30%;
         cursor: pointer;
+      
     }
 
     .icons{

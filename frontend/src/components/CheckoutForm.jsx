@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateUser } from '../utils/utils';
 import { setAddress } from '../slices/userSlice';
 import "../Styles/UserForm.scss"
+import Loader from './Loader';
 
 const CheckoutForm = () => {
     const user = useSelector(state=>state.currentUser);
@@ -10,6 +11,7 @@ const CheckoutForm = () => {
         const [formValues,setFormvalues]  = useState({...user?.address});
         const [click,setClick] = useState(false);
         const dispatch = useDispatch();
+        const [loading,setLoading] = useState(false);
 
           // validation fields
   const [formErrors, setFormErrors] = useState({});
@@ -21,18 +23,24 @@ const CheckoutForm = () => {
 
     if (!values.street) {
       errors.street = "Street required!";
+    }else if(values.street.length>30){
+        errors.street = "Street Name Too Long!";
     }
     if (!values.city) {
-      errors.city = "City required!";
+      errors.city = "Enter Your City Name!";
+    }else if(values.city.length>15){
+        errors.city = "Invalid City Name!";
     }
-    if (!values.city) {
-      errors.city = "City required!";
-    }
+
     if (!values.state) {
-      errors.state = "State required!";
+      errors.state = "State Name Required!";
+    }else if(values.state.length>25){
+        errors.state = "State Name Too Long!";
     }
     if (!values.pin) {
-      errors.pin = "Pin-Code required!";
+      errors.pin = "Enter Pin-Code!";
+    }else if(values.pin.length!=6){
+        errors.pin = "Enter 6 digit Pin-Code!";
     }
     return errors;
   };
@@ -49,7 +57,7 @@ const CheckoutForm = () => {
 
     const handleSave=async()=>{
         //validation
-
+        setLoading(true);
         setFormErrors(validate(formValues));
         setIsSubmit(true);
 
@@ -63,15 +71,19 @@ const CheckoutForm = () => {
         
         try {
             const res = await updateUser(id,{address : [formValues]});
-            dispatch(setAddress(formValues)); 
+            dispatch(setAddress(formValues));
+            setLoading(false); 
             setFormvalues(formValues);
             setClick(false);
         } catch (error) {
+            setLoading(false); 
             console.log(error);
         } 
     };
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       setData();
+    }else{
+      setLoading(false);
     }
   }, [formErrors]);
 
@@ -106,7 +118,9 @@ const CheckoutForm = () => {
                 setFormErrors({});
                 setClick(false);
             }}>CANCEL</button>
-            <button onClick={handleSave}>EDIT</button>
+           {
+            loading ? <Loader /> :  <button onClick={handleSave}>EDIT</button>
+           }
         </div>
         {/* button */}
     </div>

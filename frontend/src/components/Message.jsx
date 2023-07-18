@@ -3,13 +3,16 @@ import { getMessages } from '../utils/utils';
 import { message } from 'antd';
 import ChatMessage from './ChatMessage';
 import Input from './Input';
+import AdminChatMessage from './AdminChatMessage';
+import { useSelector } from 'react-redux';
 
 const Message = (props) => {
 
     const [messages,setMessages] = useState([]);
     const [click,setClick] = useState(false);
     const id = props.state;
-    console.log(id);
+    const user = useSelector(state=>state.currentUser);
+  
     useEffect(()=>{
         const get = async()=>{
             try {
@@ -20,18 +23,22 @@ const Message = (props) => {
             }
         }
         get();
-    },[click])
+    },[click,props.state])
 
   return (
-    <div>
+    <div className='messageContainer'>
         <div className="header">
             {
                 messages?.map((ele)=>{
-                    return <ChatMessage state={ele} />
+                    return <>
+                    {
+                        ele.postedBy==user?.name ?  <ChatMessage state={ele} st={click}/> : <AdminChatMessage state={ele}/>
+                    }
+                    </>
                 })
             }
-            <Input state={id} st={{setClick}}/>
         </div>
+        <Input state={id} st={{setClick}}/>
     </div>
   )
 }

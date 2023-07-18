@@ -72,6 +72,10 @@ const Register = () => {
     const errors = {};
     const regex =
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      const special = /[!@#$%^&*(),.?":{}|<>]/g
+      const lowerCase = /[a-z]/g;
+      const upperCase = /[A-Z]/g;
+      const numbers = /[0-9]/g;
 
     if (!values.name) {
       errors.name = "Name required!";
@@ -107,6 +111,18 @@ const Register = () => {
       errors.password = "Password required!";
     } else if (values.password.length < 6) {
       errors.password = "Password too short!";
+    }    if(!values.password){
+      errors.password = "Password required!";
+    }else if(!values.password.match(lowerCase)){
+      errors.password = "Password should contain lowercase letters!";
+    }else if(!values.password.match(upperCase)){
+      errors.password = "Password should contain uppercase letters!";
+    }else if(!values.password.match(special)){
+      errors.password = "Password should contain a special character!";
+    }else if(!values.password.match(numbers)){
+      errors.password = "Password should contain numbers!";
+    } else if (values.password.length>15) {
+      errors.password = "Password too long!";
     }
 
     if (Object.keys(errors).length != 0) {

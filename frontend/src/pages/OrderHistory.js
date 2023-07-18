@@ -34,6 +34,13 @@ const OrderHistory = () => {
 
                 const res = await getHistory({ email: user.email });
                 setItems(res.data);
+                let t = 0;
+                {
+                    res.data?.map((ele) => {
+                        t = t + (Number(ele.product.price) * Number(ele.quantity));
+                    })
+                }
+                setTotal(t);
 
             } catch (error) {
                 console.log(error);
@@ -46,24 +53,24 @@ const OrderHistory = () => {
             <div className="top">
                 <h1 className='heading'>History</h1>
                 <div className='subTop'>
-                {
-                    <div className="earnings">
-                        <span>Orders: {items.length}</span>
-                    </div>
-                }
-                {/* {
+                    {
+                        <div className="earnings">
+                            <span>Orders: {items.length}</span>
+                        </div>
+                    }
+                    {/* {
                     user?.role == "vendor" && <div className="earnings">
                         &#x20B9;<span>{total}.00</span>&#x2191;
                     </div>
                 } */}
 
-                {/* testing for vendor only  */}
+                    {/* testing for vendor only  */}
 
-                {
-                    <div className="earnings">
-                        &#x20B9;<span>{total}.00</span>&#x2191;
-                    </div>
-                }
+                    {
+                        <div className="earnings">
+                            &#x20B9;<span>{total}.00</span>&#x2191;
+                        </div>
+                    }
 
                 </div>
             </div>
