@@ -2,7 +2,9 @@ import React from 'react'
 
 const UserComponent = (props) => {
     const handleClick=()=>{    
-        props.st.setCurrentId(props.state.user.id)
+        props.st.setCurrentId(props.state.id)
+        // console.log(props.state.id);
+        
     }
   return (
     <div onClick={handleClick}>

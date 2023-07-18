@@ -9,9 +9,11 @@ router.post("/sendMessage",async(req,res)=>{
         const chatId = await Chat.findOne({id : req.body.id});
 
         if(chatId){
+            console.log("update!");
             const result = await Chat.updateOne({id : req.body.id},{ $push : { messages :  req.body.messages.at(0) } });
             res.status(201).json(result);
         }else{
+            console.log("create");
             const result = await Chat.create({...req.body});
             res.status(201).json(result);
         }
@@ -24,7 +26,7 @@ router.get("/getMessages/:id",async(req,res)=>{
     try {
         const id = req.params.id;
 
-        const messages = await Chat.findOne({"user.id" : id});
+        const messages = await Chat.findOne({id : id});
         res.status(200).json(messages);
 
     } catch (error) {

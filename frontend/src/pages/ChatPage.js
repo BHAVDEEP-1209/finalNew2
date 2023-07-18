@@ -16,26 +16,19 @@ const ChatPage = () => {
   const [messages,setMessages] = useState([]);
   const [users,setUsers] = useState([]);
   const [currentId,setCurrentId] = useState("");
-//   const [onLoad,setOnLoad] = useState(false);
-  
-
-
-
-
-  const handleUserClick=()=>{
-
-  }
 
 
   useEffect(()=>{
     const get = async()=>{
         try {
-            const res = await getMessages(user?.id);
-            setMessages(res.data.messages);
+          const adminId = await getAdminId();
+          setCurrentId(adminId.data._id+user?.id);
         } catch (error) {
             console.log(error);
         }
     }
+
+    console.log("curr",currentId);
     
     // for admin 
     const get2 =async()=>{

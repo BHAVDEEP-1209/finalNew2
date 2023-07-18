@@ -9,6 +9,7 @@ const Message = (props) => {
     const [messages,setMessages] = useState([]);
     const [click,setClick] = useState(false);
     const id = props.state;
+    console.log(id);
     useEffect(()=>{
         const get = async()=>{
             try {
@@ -19,17 +20,17 @@ const Message = (props) => {
             }
         }
         get();
-    },[])
+    },[click])
 
   return (
     <div>
         <div className="header">
             {
                 messages?.map((ele)=>{
-                    return <ChatMessage state={ele}/>
+                    return <ChatMessage state={ele} />
                 })
             }
-            <Input state={id}/>
+            <Input state={id} st={{setClick}}/>
         </div>
     </div>
   )
