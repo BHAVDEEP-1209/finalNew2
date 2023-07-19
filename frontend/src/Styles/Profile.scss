@@ -7,6 +7,17 @@
     padding-bottom: 2%;
     height: calc(100% - 110px);
     min-height: 70vh;
+    position: relative;
+
+    .plusIcon{
+        position:fixed;
+        width: 70px;
+        height: 70px;
+        right: 2.5%;
+        bottom: 4%;
+        cursor: pointer;
+
+    }
 
     .leftDiv{
         display: flex;

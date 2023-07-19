@@ -3,7 +3,7 @@ import "../Styles/Checkout.scss"
 import UserForm from '../components/UserForm'
 import CheckoutForm from '../components/CheckoutForm'
 import { useSelector } from 'react-redux'
-import { PlaceOrders, getCartItems } from '../utils/utils'
+import { PlaceOrders, getCartItems, updateProductOrders } from '../utils/utils'
 import CartItem from '../components/CartItem'
 import { useNavigate, useParams } from 'react-router-dom'
 import Navbar from "../components/Navbar"
@@ -35,6 +35,7 @@ const Checkout = () => {
     };
     //////////////////////////
 
+    console.log("cartToal",cartTotal);
 
   const handleCoupon = (e) => {
 
@@ -44,14 +45,22 @@ const Checkout = () => {
       return;
     }
 
-    console.log(input)
     if (input == "NODEL") {
+
       setDelivery(0);
-      setCartTotal(cartTotal - delivery);
+      setDiscount(0);
+      setCartTotal(total);
+
     } else if (input == "BUMPER") {
-      const d = 0.20 * total
+
+      if(delivery==0){
+        setDelivery(200);
+      }
+      const tempCartTotal = total+delivery;
+      const d = 0.20 * tempCartTotal;
       setDiscount(d);
-      setCartTotal(total + delivery - d);
+      setCartTotal(tempCartTotal - d);
+
     } else {
       msg = "Invalid Coupon!"
       openNotificationWithIcon('warning')
@@ -104,6 +113,9 @@ const Checkout = () => {
     const get = async () => {
       try {
         const items = await PlaceOrders(user.id);
+        
+        // for  updating no of orders on product
+        const temp = await updateProductOrders({items : cartItems});
         
         msg = "Order Placed!"
         openNotificationWithIcon('success')

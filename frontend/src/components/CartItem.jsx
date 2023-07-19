@@ -32,9 +32,12 @@ const CartItem = (props) => {
   //////////////////////////
 
   const handleAdd = async () => {
-    if (quan < 10) {
+    if (quan < product?.stock) {
       nq = quan + 1;
       setQuan(nq);
+    }else{
+      msg = "Cannot Exceed Stock Quantity!";
+      openNotificationWithIcon("warning");
     }
   };
 
@@ -83,6 +86,8 @@ const CartItem = (props) => {
     setLoad(true);
   }, [quan]);
 
+  console.log("stock",product.stock);
+
   return (
     <>
       <div className="cartItem">
@@ -118,17 +123,23 @@ const CartItem = (props) => {
           </div>
           <div className="main">
             <span>Description: {product?.description}</span>
+
+            {/* testing  */}
+            <span>Quanitity:{props.state?.quantity}</span>
+            <span>Calculated Price: {props.state?.quantity * product?.price}</span>
+            <span>New Price:</span>
+
             {location == "/orders" && <span>{props.state.orderStatus}</span>}
           </div>
 
           {location == "/cart" && (
             <div className="footer">
-              <div className="add">
+              <div className="add" style={{cursor: "pointer"}}>
                 <RemoveIcon onClick={handleSub} className="icon" />
               </div>
               <h1>{quan}</h1>
-              <div className="add">
-                <AddIcon onClick={handleAdd} className="icon" />
+              <div className="add" style={{cursor: "pointer"}}>
+                <AddIcon onClick={handleAdd} className="icon"/>
               </div>
             </div>
           )}

@@ -5,7 +5,11 @@ const Cart = require("../models/CartModel")
 ///////// adding Item to cart!
 router.post("/addToCart",async(req,res)=>{
     try {
-        const item  = await Cart.find({id : req.body.id});
+        const item  = await Cart.find({id : req.body.id });
+        /// testing for the new orders
+
+        // const item  = await Cart.find({id : req.body.id , purchasedAs : "cart"});
+        
         let data = {...req.body};
 
         if(item.length>0){
@@ -64,10 +68,11 @@ router.get("/PlaceOrders/:id",async(req,res)=>{
     const id = req.params.id;
     try {
         const items = await Cart.find({purchasedAs : "cart" , purchasedBy : id});
+        console.log(items);
         {
             items?.map(async(item)=>{
                 const ord = item.product.Orders;
-                await Cart.updateOne({id : item.id},
+                const result = await Cart.updateOne({id : item.id},
                 { $set : { "purchasedAs" : "order" ,  "product.Orders": ord+ 1} }
                 );
             })
@@ -76,6 +81,8 @@ router.get("/PlaceOrders/:id",async(req,res)=>{
     } catch (error) {
         res.status(500).json("Error while getting data!");
     }
+
+    console.log(id);
    
 })
 

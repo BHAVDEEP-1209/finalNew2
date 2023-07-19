@@ -285,7 +285,7 @@ const ProductDetail = () => {
               <div className="ordersInfo">
                 <img src={money} alt="" />
                 <h1>Total Profit:</h1>
-                <span>{product?.Orders * product?.price}</span>
+                {/* <span>{product?.Orders * product?.price * }</span> */}
               </div>
             </div>
             

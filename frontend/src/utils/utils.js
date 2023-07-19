@@ -79,3 +79,6 @@ export const getMessages = (id)=>(axios.get(`http://localhost:5000/chat/getMessa
 
 /// get users list 
 export const getUsers = ()=>(axios.get("http://localhost:5000/chat/getAllUsers"));
+
+
+export const updateProductOrders = (values)=>(axios.post(`http://localhost:5000/product/updateProductOrders`,values))

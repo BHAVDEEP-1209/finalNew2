@@ -31,46 +31,46 @@ const UserForm = (props) => {
     const upperCase = /[A-Z]/g;
     const numbers = /[0-9]/g;
 
-    if (!values.street) {
+    if (!values?.street) {
       errors.street = "Street required!";
-    }else if(values.street.length>30){
+    }else if(values?.street?.length>30){
         errors.street = "Street Name Too Long!";
     }
     if (!name) {
       errors.name = "Enter Your Name...!";
-    }else if(name.length>25){
+    }else if(name?.length>25){
         errors.name = "Input Too Long : Invalid Name!";
     }
     if (!password) {
       errors.password = "Password required!";
-    }else if(password.length<6){
+    }else if(password?.length<6){
         errors.password = "Password too short!";
-    }else if(password.length>15){
+    }else if(password?.length>15){
         errors.password = "Password too long!";
-    }else if(!password.match(lowerCase)){
+    }else if(!password?.match(lowerCase)){
         errors.password = "Password should contain lowercase letters!";
-      }else if(!password.match(upperCase)){
+      }else if(!password?.match(upperCase)){
         errors.password = "Password should contain uppercase letters!";
-      }else if(!password.match(special)){
+      }else if(!password?.match(special)){
         errors.password = "Password should contain a special character!";
-      }else if(!password.match(numbers)){
+      }else if(!password?.match(numbers)){
         errors.password = "Password should contain numbers!";
     }
 
-    if (!values.city) {
+    if (!values?.city) {
       errors.city = "Enter Your City Name!";
-    }else if(values.city.length>15){
+    }else if(values?.city?.length>15){
         errors.city = "Invalid City Name!";
     }
 
-    if (!values.state) {
+    if (!values?.state) {
       errors.state = "State Name Required!";
-    }else if(values.state.length>25){
+    }else if(values?.state?.length>25){
         errors.state = "State Name Too Long!";
     }
-    if (!values.pin) {
+    if (!values?.pin) {
       errors.pin = "Enter Pin-Code!";
-    }else if(values.pin.length!=6){
+    }else if(values?.pin?.length!=6){
         errors.pin = "Enter 6 digit Pin-Code!";
     }
 

@@ -140,6 +140,8 @@ function App() {
           <Route path="history" element={<OrderHistory />} />
           <Route path="vendors" element={<VendorList />} />
           <Route path="allOrders" element={<AllOrders />} />
+          <Route path="*" element={<Login />} />
+
           <Route path="allOrdersHistory" element={<AllOrdersHistory />} />
         </Route>
         }

@@ -12,6 +12,7 @@ import ArchiveIcon from "@mui/icons-material/Archive";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import plus from "../assets/add.png"
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -162,6 +163,10 @@ const Profile = () => {
         <div className="rightDiv">
           <Outlet />
         </div>
+
+        {
+        user?.role != "customer" && <img src={plus} alt="" className='plusIcon' onClick={()=>navigate("/addProduct")}/>
+      }
       </div>
     </>
   );

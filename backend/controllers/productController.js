@@ -53,7 +53,6 @@ try {
 };
 
 // get Product details
-
 exports.getProductDetails = async (req, res, next) => {
   try {
     const id = req.params.id;

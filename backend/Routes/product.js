@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const productController = require("../controllers/productController");
+const Cart = require("../models/CartModel");
 
 //////////////////////
 const Product = require("../models/productModel");
@@ -43,6 +44,23 @@ router.post("/updateProduct/:id", async (req, res) => {
       ...req.body.formValues,
     });
     res.status(201).json(updatedProduct);
+  } catch (error) {
+    res.status(500).json("Error while updating!");
+  }
+});
+
+
+///////// increasing order quantity
+router.post("/updateProductOrders/", async (req, res) => {
+  try {
+    const array = req.body.items;
+    {
+      array?.map(async(ele)=>{
+        const orders = ele.product.Orders;
+        const res = await Product.findByIdAndUpdate( ele.product._id ,{$set : { Orders : (ele.product.Orders + 1) } });
+      })
+    }
+    res.status(201).json("Product Orders Updated!");
   } catch (error) {
     res.status(500).json("Error while updating!");
   }
